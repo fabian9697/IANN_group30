@@ -1,0 +1,65 @@
+Hello everybody, 
+
+last week we saw beautiful videos explaining Bayesian Networks.
+
+In our Task we needed to improve examples and a questionair regarding Bayesian Networks 
+on Slides 2 to 18 in Lecture 5 Part 2 Applied Graphical Networks.
+
+Lets go and have a look at the old and new slides.
+
+
+On the first and second page an example was presented with its equations for conditional independence.
+
+The main message is: How can we use graphical models for real world problems and what kind of method is useable.
+
+Therefore we pointed this messsages out and put it at the top of our new slide.
+
+Because we also should replace the old examples through more study and coxi like examples we choose a new one. 
+
+The example is explained in 3 ways: Graphical - literal - mathematical
+
+So that you can understand the example even without the lecture.
+
+Animations are used to help the presenter to proceed in a structured manner.
+
+After a first click the conclusion is presented. After a second one the conclusion is expand by the topic of the next slide.
+
+
+
+Again, we focussed on the next two slides message. Its about what is a CPT and how does it work to create one. 
+
+We split this in two messages.
+
+First we want to explain on our new slide: How does it work with CPTs?
+
+This should help to understand the structure of the CPTs before they are actually used in an application example.
+
+The slide gives a self-explanatory summary of the structure of the CPTs.
+
+Again, Animations are used to help the presenter to proceed in a structured manner.
+
+Therefore we choose to begin at the left top corner going through the coloumn and ending in the right bottom corner.
+
+This automatically includes, that an additionally important message, marked with an exclamation mark is mentioned at the end.
+
+That way, the message stays better in your mind for going on with the concrete example.
+
+The knowledge gained can now be applied using the example from the previous slide.
+
+
+
+These old slides, also show the implementation of the old example. 
+
+As you can see, the two pages are more or less identical. Only some colours in the tables are different.
+
+We try to sum it up on one page.
+
+Here again Animations are used to help the presenter to proceed in a structured manner too.
+
+We have dispensed with further descriptions here, as a detailed explanation has already taken place in the slide before.
+
+This allowed us to concentrate entirely on the example on this slide.
+
+
+This was the first part of slides improvement. The second part will be explained by Christoph Werries.
+
