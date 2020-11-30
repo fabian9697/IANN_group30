@@ -1,0 +1,2 @@
+https://en.wikipedia.org/wiki/Fisher_information
+https://math.stackexchange.com/questions/396982/fisher-information-of-a-binomial-distribution
