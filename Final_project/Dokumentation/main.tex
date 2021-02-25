@@ -1,0 +1,221 @@
+% Koma-Skript Vorlage für Artikel
+\documentclass[
+    pdftex,
+    a4paper,
+    oneside,
+    halfparskip,
+    headsepline,
+    footsepline,
+    12pt
+]{scrartcl}
+
+% Beginn der Präambel
+
+% Paket für die Indexerstellung.
+\usepackage{makeidx}
+\makeindex 
+
+% Paket für Übersetzungen ins Deutsche
+% Paket für Rechtschreibung und Quotes
+\usepackage[english]{babel}
+\usepackage[babel=true]{csquotes}
+% \usepackage[babel,german=swiss]{csquotes}
+% \usepackage[babel,german=quotes]{csquotes} % Deutsche
+% \usepackage[babel,german=swiss]{csquotes} % Schweizer
+% \usepackage[babel,german=guillemets]{csquotes} % Französische
+
+% Pakete für Latin1 Zeichnensätze.
+% UNIX:
+%\usepackage[latin1]{inputenc}
+% Windows:
+\usepackage[ansinew]{inputenc}
+
+% Paket für TS1 Zeichensätze
+\usepackage[T1]{fontenc}
+
+% Paket mit weiteren Symbolen
+\usepackage{textcomp}
+
+% Paket zum Erweitern der Tabelleneigenschaften
+\usepackage{array}
+
+% Paket für Grafiken
+% \usepackage{graphicx}
+\usepackage[pdftex]{graphicx}
+% \usepackage{epstopdf}
+% Pfad für Bilder, hier: alle Bilder im Unterverzeichnis Bilder
+\graphicspath{{./Pictures/}}
+
+% Paket für Mathematische Symbole
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Pakete für Type 1 Fonts (bessere Darstellung in PDF)
+%\usepackage{mathptmx}             % Times + passende Mathematik-Fonts
+%\usepackage[scaled=.92]{helvet}   % skalierte Helvetica als \sfdefault
+\usepackage{courier}               % Courier als \ttdefault
+
+% Paket für Drehungen von Elementen
+\usepackage{rotating}
+
+% Package für Farben
+\usepackage{color}
+
+% Paket für Links innerhalb des PDF Dokuments
+\definecolor{LinkColor}{rgb}{0,0,0.5}
+\usepackage[%
+    pdftitle={Titel},%
+  ]{hyperref}
+\hypersetup{colorlinks=true,%
+    linkcolor=LinkColor,%
+    citecolor=LinkColor,%
+    filecolor=LinkColor,%
+    menucolor=LinkColor,%
+    pagecolor=LinkColor,%
+    urlcolor=LinkColor}
+
+% Paket für Listings
+\usepackage[savemem]{listings}
+\lstloadlanguages{TeX}
+
+\definecolor{lbcolor}{rgb}{0.85,0.85,0.85}
+
+\lstset{language=[LaTeX]TeX,
+    numbers=left,
+    stepnumber=1,
+    numbersep=5pt,
+    numberstyle=\tiny,
+    breaklines=true,
+    breakautoindent=true,
+    postbreak=\space,
+    tabsize=2,
+    basicstyle=\ttfamily\footnotesize,
+    showspaces=false,
+    showstringspaces=false,
+    extendedchars=true,
+    backgroundcolor=\color{lbcolor}}
+
+% Index erzeugen
+\makeindex
+
+ % Allows Author-Year Bibliographies, added as a section
+\usepackage{natbib}
+
+% Setzen von Zählern
+\setcounter{secnumdepth}{7}
+\setcounter{tocdepth}{7}
+
+% Festlegen von Kopf- und Fusszeilen
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+
+% Kopfzeile:
+% \ihead{innen}
+% \chead{Mitte}
+% \ohead{außen}
+
+% Fußzeile:
+% \ifoot{innen},
+% \cfoot{Mitte},
+% \ofoot{außen}
+
+\ohead{\bfseries\thepage}
+   % Seitenzahl fett an den äußeren Rand der Kopfzeile.
+\automark[section]{chapter}
+   % Kapiteltitel bei ungeraden Seiten (standardgemäß mittig) in die Kopfzeile.
+
+% Paket für die Darstellung von "Text, wie er eingegeben wird"
+% \begin{verbatim} \end{document}\end{verbatim} erzeugt die Ausgabe von
+% \end{document} im Typewrites-Style und beendet nicht das Dokument.
+\usepackage{verbatim}
+
+% Paket für phonetische Zeichen
+\usepackage{tipa}
+
+% Paket für Boxen
+\usepackage{fancybox}
+
+% Ende der Präambel
+
+% Beginn des Dokumentes
+\begin{document}
+
+% Einige unübliche Trennungen
+\hyphenation
+{Ur-instinkt }
+
+% Definieren des Titels
+\title{Titel}
+\author{Fabian Imkenberg, Jacqueline Näther}
+\date{\today}
+
+% Einfügen des Titels
+\maketitle
+
+%Abstract wird voerst nicht benötigt
+%\begin{abstract}
+%In diesem Dokument werden ... vorgestellt.
+%\end{abstract}
+
+ % Umbenennen von Überschriften von Verzeichnissen
+\renewcommand{\contentsname}{Content}
+% Einfügen von Verzeichnissen
+\tableofcontents
+
+% Abbildungsverzeichnis
+% Einfügen eines Seitenumbruchs
+\newpage
+\listoffigures
+
+% Tabellenverzeichnis
+\newpage
+\listoftables
+
+\newpage
+% Einfügen eines Abschnittes
+\section{Introduction}
+% Setzen einer Marke für diesen Abschnitt
+\label{sec:Introduction}
+
+Dieses LaTeX Dokument stellt ... \cite{CitekeyArticle}
+\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{test.png}
+\caption{Bliblablub, dies ist eine Test-Caption}
+\end{figure}
+
+
+% Ab hier werden alle Abschnitte als Anhänge betrachtet.
+\appendix
+
+% \newpage
+% \section{Liste der Symbole}
+% \label{sec:ListeDerSymbole}
+
+% Anhang mit Symbolen
+
+\newpage
+% Definieren der Bibliographie
+\bibliographystyle{plain}
+
+% Externe .bib Datei
+\bibliography{./references}
+
+% Alternativ: Inline
+%\begin{thebibliography}{999}
+%\bibitem{homer:odyssee} Homer: Die Odyssee
+%\end{thebibliography}
+
+% Einfügen der Bibliographie
+\newpage
+\addcontentsline{toc}{section}{References}
+
+\newpage
+\renewcommand{\indexname}{Abbreviations}
+\addcontentsline{toc}{section}{Abbreviations}
+\printindex
+
+% Ende des Dokumentes
+\end{document}
