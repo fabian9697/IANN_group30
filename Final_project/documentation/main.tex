@@ -28,6 +28,8 @@
 
 \usepackage{lipsum} % Required to insert dummy text. To be removed otherwise
 
+\usepackage[nolist]{acronym}
+
 %----------------------------------------------------------------------------------------
 %	COLUMNS
 %----------------------------------------------------------------------------------------
@@ -72,7 +74,7 @@
 
 \Authors{Fabian Imkenberg, Jacqueline Naether}
 
-\Keywords{CycleGAN --- Keyword2 --- Keyword3} 
+\Keywords{CycleGAN --- Unpaired Image-to-Image Translation --- Keyword3} 
 \newcommand{\keywordname}{Keywords} % Defines the keywords heading name
 
 %----------------------------------------------------------------------------------------
@@ -94,107 +96,154 @@
 
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
-Wir benutzen die Paper \cite{image-to-image-can} und \cite{image-to-image-ccan}.
-\lipsum[1-3] % Dummy text
- and some mathematics $\cos\pi=-1$ and $\alpha$ in the text\footnote{And some mathematics $\cos\pi=-1$ and $\alpha$ in the text.}.
+As the basis of our project, we studied the paper \textit{Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks} from the \ac{BAIR} laboratory. The aim of the paper is to change different information in images. The developed network creates a new generated image based on an existing input image. Three different types of generated images are presented in this paper. A translation of a photograph to a painting by Monet, zebras to horses, and summer to winter and vice versa. The paper complements what has been learned in the module \ac{IANNWTF} by two essential building blocks, which basically depend on each other.~\cite{image-to-image-ccan}
+
+Until now, training data was mostly available in input-output pairs. This means that in the example translation summer to winter, for each photo of a location in summer there also exists a photo of the same location in winter. Thus, the network previously learned translation using complete individual examples. In the case of the paper, however, a network is developed that is trained based on two domains. As training input, the network is fed a domain of, for example, summer images. The training output then contains a domain of winter images. The network learns the different properties of summer and winter based on these image domains.~\cite{image-to-image-ccan}
+
+As a second building block, the simple \ac{GAN} as presented in \ac{IANNWTF} is extended into a so-called Cycle-\ac{GAN}. The name is based on the use of the Cycle Consistency Loss in the training phase. We reimplemented and tested such a Cycle-\ac{GAN} based on the paper.~\cite{image-to-image-ccan}
 
 %------------------------------------------------
 
 \section{Methods}
 
-\begin{figure*}[ht]\centering % Using \begin{figure*} makes the figure take up the entire width of the page
-	\includegraphics[width=\linewidth]{view}
-	\caption{Wide Picture}
-	\label{fig:view}
-\end{figure*}
-
-\lipsum[2] % Dummy text
-
-\begin{equation}
-	\cos^3 \theta =\frac{1}{4}\cos\theta+\frac{3}{4}\cos 3\theta
-	\label{eq:refname2}
-\end{equation}
-
-\lipsum[2] % Dummy text
-
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item First item in a list
-	\item Second item in a list
-	\item Third item in a list
-\end{enumerate}
+As a transfer performance, our goal is not to teach our network the same translation as described in the paper.  Therefore, we decided to optimize our network to perform a translation from apple images to orange images and vice versa. For this, we had to select a suitable dataset, as well as to work out the methodological basics of the network architecture from the paper. In the following, these basics will be explained.
 
 \subsection{Network Architecture}
+As the basis of the network architecture, the \ac{GAN} already known through the \ac{IANNWTF} module is extended to the Cycle-\ac{GAN} known through the paper \cite{image-to-image-ccan}.
 
-\lipsum[3] % Dummy text
+\paragraph{\acl{GAN}s} basically exist out of two neural networks, which more or less battle against each other, the \textit{Generator} and \textit{Discriminator}. The Generator takes the input and generates a fake image out of it, while the Discriminator tries to discriminate between generated and true images. Both parts of the network are trained individually from each other. The loss used in training is the adveresarial loss.~\cite{Introduction-to-Cycle-GANs, GAN-Courseware}
 
-\paragraph{GAN} \lipsum[2] % Dummy text
-\paragraph{CycleGAN} \lipsum[2] % Dummy text
+\paragraph{Cycle-\ac{GAN}s} extend this concept, in terms of unpaired image-to-image translation. As mentioned in the introduction, the choosen paper uses domains of input \textit{D\textsubscript{x}} and output images \textit{D\textsubscript{y}}. The Generator is trained two main functions. Generating images from domain \textit{D\textsubscript{x}} to images of domain \textit{D\textsubscript{y}} ($G: X \rightarrow Y$) and vice versa ($F: Y \rightarrow X$). This principle is shown in \autoref{fig:mappingFunctions}.~\cite{image-to-image-ccan}
 
-\subsection{Formulation}
-
-\lipsum[4] % Dummy text
-\paragraph{Adversarial Loss} \lipsum[2] % Dummy text
-\paragraph{Cycle Consistency Loss} \lipsum[2] % Dummy text
-
-\begin{figure}[ht]\centering
-	\includegraphics[width=\linewidth]{results}
-	\caption{In-text Picture}
-	\label{fig:results}
+\begin{figure} \centering 
+% Using \begin{figure*} makes the figure take up the entire width of the page
+	\includegraphics[width=0.8\linewidth]{mappingFunctions}
+	\caption{Mapping functions of the Cycle-\ac{GAN}~\cite{image-to-image-ccan}}
+	\label{fig:mappingFunctions}
 \end{figure}
 
-Reference to Figure \ref{fig:results}.
+On the basis of this it becomes clear that a simple back and forward translation can lead to the fact that the back translation does not refer to exactly the original input image, but to another image within the input image domain. This is where the cycle consistency loss comes into play. This one is used in addition to the adversarial loss so that the network learns to return to the original image during a back and forward translation. The cycle consistency losses for the two mapping functions are shown in the \autoref{fig:cycleConsistencyLoss}.~\cite{image-to-image-ccan}
+
+\begin{figure*}[ht] \centering 
+% Using \begin{figure*} makes the figure take up the entire width of the page
+	\includegraphics[width=\linewidth]{cycleConsistencyLoss}
+	\caption{Cycle Consistency Losses in the back and forward translation~\cite{image-to-image-ccan}}
+	\label{fig:cycleConsistencyLoss}
+\end{figure*}
+
+
+\subsection{Formulation}
+In order to better understand the function and subsequent implementation of the losses, the mathematical background will be discussed in a bit more detail.
+
+\paragraph{Adversarial Loss} is also used in training of standard \ac{GAN}s.
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item description about background maths of the loss
+	\item equation of loss
+\end{enumerate}
+
+
+\paragraph{Cycle Consistency Loss} is used additionally to the adversarial loss in the Cycle-\ac{GAN}.
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item description about background maths of the loss
+	\item equation of loss
+\end{enumerate}
+
+
+\subsection{Dataset}
+In addition to the architecture, a suitable dataset also had to be selected. On the one hand, it should be versatile, but on the other hand, it must not contain too large images so that the computing time is not too high.
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item describe which dataset we choose ?!
+	\item what are the facts of the training/test data and images itself ?!
+\end{enumerate} 
+
+
 
 %------------------------------------------------
 \section{Implementation}
-\lipsum[9] % Dummy text
-\subsection{Pre-Processing} \lipsum[2] % Dummy text
-\subsection{Training} \lipsum[2] % Dummy text
-\subsection{Test} \lipsum[2] % Dummy text
+The implementation is performed using the learned three steps, pre-processing, training and test from the module \ac{IANNWTF} \cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle-\ac{GAN}. How this implementation is realized is now explained in more detailed.
+
+\subsection{Pre-Processing} 
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item Wie wurde der Dataset verarbeitet, Funktionen (shuffel, buffer, prefetch?)
+	\item was haben wir für Werte genau ausgewählt und warum?
+	\item Wie groß ist Training/Testdataset
+\end{enumerate}
+
+\subsection{Training}
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item Welche Schritte gibt es im Training? Generator/Discriminator
+	\item Welche Klassen/Funktionen wurden hierfür dann geschrieben?
+	\item Wo sind relevanten Werte gewählt worden? Warum wurden sie so gewählt?(z.B. Numbers of epoch?)
+\end{enumerate}
+
+\subsection{Test}
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item Welche Schritte gibt es im Test? Generator/Discriminator, einfacher Forward Step?
+	\item Ausgabe/Ergebnis anzeigen, wie umgesetzt?
+\end{enumerate}
+
+%------------------------------------------------
+\section{Evaluation}
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item Wir haben improvements anhand folgender zwei paper vorgenommen
+\end{enumerate}
+
+\subsection{Improved Paper 1}
+
+\subsection{Improved Paper 2}
+
+%\begin{table}[hbt]
+%	\caption{Table of Grades}
+%	\centering
+%	\begin{tabular}{llr}
+%		\toprule
+%		\multicolumn{2}{c}{Name} \\
+%		\cmidrule(r){1-2}
+%		First name & Last Name & Grade \\
+%		\midrule
+%		John & Doe & $7.5$ \\
+%		Richard & Miles & $2$ \\
+%		\bottomrule
+%	\end{tabular}
+%	\label{tab:label}
+%\end{table}
 
 %------------------------------------------------
 
 \section{Results}
 
-\lipsum[3] % Dummy text
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item Welche Ergebnisse erzielt das Training?
+	\item Welches Ergebnis erzielt der Test?
+\end{enumerate}
 
-\subsection{Evaluation}
-
-\lipsum[3] % Dummy text
-
-\begin{table}[hbt]
-	\caption{Table of Grades}
-	\centering
-	\begin{tabular}{llr}
-		\toprule
-		\multicolumn{2}{c}{Name} \\
-		\cmidrule(r){1-2}
-		First name & Last Name & Grade \\
-		\midrule
-		John & Doe & $7.5$ \\
-		Richard & Miles & $2$ \\
-		\bottomrule
-	\end{tabular}
-	\label{tab:label}
-\end{table}
-
-
-\subsection{Subsection}
-
-\lipsum[6] % Dummy text
 
 %------------------------------------------------
 
 \section{Limitations and Discussion}
 
-\lipsum[5] % Dummy text
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item Datensatz/Bildgröße
+	\item Dauer des Trainings und beanspruchung der rechenzeit
+\end{enumerate}
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
 %----------------------------------------------------------------------------------------
 
 \phantomsection
 \bibliographystyle{unsrt}
-\bibliography{sample.bib}
+\bibliography{sample}
 
 %----------------------------------------------------------------------------------------
+
+\begin{acronym}
+\acro{BAIR}[BAIR]{Berkeley AI Research}
+\acro{IANNWTF}[IANNWTF]{Implementing Artificial Networks with Tensorflow}
+\acro{GAN}[GAN]{Generative Adversarial Network}
+%\acroplural{Kuerzel}[Kurzform des Plurals]{Langform des Plurals}
+\end{acronym}
+
+%----------------------------------------------------------------------------------------
+
 
 \end{document}
