@@ -143,10 +143,12 @@ In order to better understand the function and subsequent implementation of the 
 \end{split}
 \end{equation*}
 
-\paragraph{Cycle Consistency Loss} is used additionally to the adversarial loss in the Cycle-\ac{GAN}. The idea has already been briefly explained before, that a generator \textit{G} translates an image \textit{Input\_ A} from the domain \textit{X} into an image \textit{B} of the domain \textit{Y}. In the backward translation of generator \textit{F}, an image \textit{Cyclic\_ A} from domain \textit{X} will be created from the image \textit{B} of domain \textit{Y}. The difference between image \textit{Input\_ A} and \textit{Cyclic\_ A} forms the cycle consistency loss \cite{Introduction-to-Cycle-GANs}. This approach can be seen in \autoref{fig:simplified-cycle-gan} as a simplified architecture \cite{Introduction-to-Cycle-GANs}. Moreover in \cite{Introduction-to-Cycle-GANs}, the cycle consistency loss is described mathematically as follows:
+\paragraph{Cycle Consistency Loss} is used additionally to the adversarial loss in the Cycle-\ac{GAN}. The idea has already been briefly explained before, that a generator \textit{G} translates an image \textit{Input\_ A} from the domain \textit{X} into an image \textit{B} of the domain \textit{Y}. In the backward translation of generator \textit{F}, an image \textit{Cyclic\_ A} from domain \textit{X} will be created from the image \textit{B} of domain \textit{Y}. The difference between image \textit{Input\_ A} and \textit{Cyclic\_ A} forms the cycle consistency loss \cite{Introduction-to-Cycle-GANs}. In \cite{Introduction-to-Cycle-GANs}, the cycle consistency loss is described mathematically as follows:
 \begin{equation*}
 	Loss_{cyc}(G,F,X,Y) = \frac{1}{m} \sum^{m}_{i=1}[F(G(x_i))-x_i]+[G(F(y_i))-y_i]
 \end{equation*}
+
+In summary, the Cycle-\ac{GAN} is built from two generators, \textit{Generator A2B} and \textit{Generator B2A}, and two discriminators, \textit{Discriminator A} und \textit{Discriminator B}. This architecture is shown simplified in \autoref{fig:simplified-cycle-gan}.
 
 \begin{figure}[h] \centering 
 	\includegraphics[width=\linewidth]{simplified-cycle-gan}
@@ -166,7 +168,9 @@ In addition to the architecture, a suitable dataset also had to be selected. On 
 
 %------------------------------------------------
 \section{Implementation}
-The implementation is performed using the learned three steps, pre-processing, training and test from the module \ac{IANNWTF} \cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle-\ac{GAN}. How this implementation is realized is now explained in more detailed.
+The implementation is performed using the learned three steps, pre-processing, training and test from the module \ac{IANNWTF} \cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle-\ac{GAN} architecture. How this implementation is realized is now explained in more detailed.
+
+\subsection{Architecture}
 
 \subsection{Pre-Processing} 
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
