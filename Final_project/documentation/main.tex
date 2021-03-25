@@ -139,7 +139,7 @@ As a second building block, the simple \ac{GAN} as presented in \ac{IANNWTF} is 
 
 As a transfer performance, our goal is not to teach our network the same translation as described in the paper.  Therefore, we decided to optimize our network to perform a translation from apple images to orange images and vice versa. For this, we had to select a suitable dataset, as well as to work out the methodological basics of the network architecture from the paper. In the following, these basics will be explained.
 
-\subsection{Network Architecture}
+\subsection{Architectures}
 As the basis of the network architecture, the \ac{GAN} already known through the \ac{IANNWTF} module is extended to the Cycle-\ac{GAN} known through the paper \cite{image-to-image-ccan}.
 
 \paragraph{\acl{GAN}s} basically exist out of two neural networks, which more or less battle against each other, the \textit{Generator} and \textit{Discriminator}. The Generator takes the input and generates a fake image out of it, while the Discriminator tries to discriminate between generated and true images. Both parts of the network are trained individually from each other. The loss used in training is the adveresarial loss.~\cite{Introduction-to-Cycle-GANs, GAN-Courseware}
@@ -190,14 +190,20 @@ In summary, the Cycle-\ac{GAN} is built from two generators, \textit{Generator A
 
 
 \subsection{Dataset}
-In addition to the architecture, a suitable dataset also had to be selected. On the one hand, it should be versatile, but on the other hand, it must not contain too large images so that the computing time is not too high.
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item describe which dataset we choose ?!
-	\item what are the facts of the training/test data and images itself ?!
-	\item wie groß ist der wie schaut der aus`?
-\end{enumerate} 
+In addition to the architecture, a suitable dataset also had to be selected. On the one hand, it should be versatile, but on the other hand, it must not contain too large images so that the computing time is not too high. The library \texttt{tensorflow\_ dataset} provides a dataset specifically for Cycle-\ac{GAN}s including apple and orange images. This one is called \textit{cycle\_gan/apple2orange}. The dataset contains two domains A and B each for training and test data. \autoref{tab:dataset} shows the four parts of the default configuration with the number of examples included. The examples each consist of image-label pairs. The dataset has a total size of 74,82~MiB and can therefore still be loaded and processed in a manageable time for this project. \cite{google-tf-datasets}
 
-
+\begin{table}[!b]
+\centering
+\caption{Structure of the standard configuration split of the Tensorflow dataset \textit{cycle\_gan/apple2orange} \cite{google-tf-datasets}}
+\label{tab:dataset}
+\begin{tabular}{c c}
+\textbf{index} & \textbf{examples} \\ \hline
+'testA' & 266 \\ \hline
+'testB' & 248 \\ \hline
+'trainA' & 995 \\ \hline
+'trainB' & 1019\\ \hline
+\end{tabular}
+\end{table}
 
 %------------------------------------------------
 \section{Implementation}
