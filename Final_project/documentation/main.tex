@@ -124,7 +124,7 @@ As the basis of the network architecture, the \ac{GAN} already known through the
 
 On the basis of this it becomes clear that a simple back and forward translation can lead to the fact that the back translation does not refer to exactly the original input image, but to another image within the input image domain. This is where the cycle consistency loss comes into play. This one is used in addition to the adversarial loss so that the network learns to return to the original image during a back and forward translation. The cycle consistency losses for the two mapping functions are shown in the \autoref{fig:cycleConsistencyLoss}.~\cite{image-to-image-ccan}
 
-\begin{figure*}[ht] \centering 
+\begin{figure*}[htb] \centering 
 % Using \begin{figure*} makes the figure take up the entire width of the page
 	\includegraphics[width=\linewidth]{cycleConsistencyLoss}
 	\caption{Cycle Consistency Losses in the back and forward translation~\cite{image-to-image-ccan}}
@@ -150,7 +150,8 @@ In order to better understand the function and subsequent implementation of the 
 
 In summary, the Cycle-\ac{GAN} is built from two generators, \textit{Generator A2B} and \textit{Generator B2A}, and two discriminators, \textit{Discriminator A} und \textit{Discriminator B}. This architecture is shown simplified in \autoref{fig:simplified-cycle-gan}.
 
-\begin{figure}[h] \centering 
+\begin{figure}[htb] 
+	\centering 
 	\includegraphics[width=\linewidth]{simplified-cycle-gan}
 	\caption{A simplified architecture of a Cycle-\ac{GAN} \cite{Introduction-to-Cycle-GANs}}
 	\label{fig:simplified-cycle-gan}
@@ -171,6 +172,20 @@ In addition to the architecture, a suitable dataset also had to be selected. On 
 The implementation is performed using the learned three steps, pre-processing, training and test from the module \ac{IANNWTF} \cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle-\ac{GAN} architecture. How this implementation is realized is now explained in more detailed.
 
 \subsection{Architecture}
+The architecture is built as explained in section methods before. A class \texttt{Cycle\_GAN\_Generator} and a class \texttt{Cycle\_ GAN\_Discriminator} are programmed. Two instances of each of the two classes are then created, the \texttt{generator\_A \_to\_B} and \texttt{generator\_B\_to\_A}, and the \texttt{discriminator \_A} and \texttt{discriminator\_B}.
+
+\paragraph{Generator Class} inherits from the Keras Class \texttt{Layer}. The class in general is build up of three parts, the \textit{Encoder}, \textit{Transformer} and \textit{Decoder}. Each part consists again out of different layers. The structure of the generator is shown in \autoref{fig:generator}. \cite{Introduction-to-Cycle-GANs}
+
+\begin{figure*}[htb] 
+	\centering 
+	\includegraphics[width=\linewidth]{generator}
+	\caption{The high-level structure of the Cycle-\ac{GAN}s generator \cite{Introduction-to-Cycle-GANs}}
+	\label{fig:generator}
+\end{figure*}
+
+
+
+\paragraph{Discriminator Class}
 
 \subsection{Pre-Processing} 
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
