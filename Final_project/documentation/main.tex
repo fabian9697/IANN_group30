@@ -28,7 +28,9 @@
 
 \usepackage{lipsum} % Required to insert dummy text. To be removed otherwise
 
-\usepackage[nolist]{acronym}
+\usepackage[nolist]{acronym}	% [nolist]: Acronym list should not be print out.
+
+\usepackage{listings}	% Required to insert lstlisting environment for code.
 
 %----------------------------------------------------------------------------------------
 %	COLUMNS
@@ -44,6 +46,35 @@
 \definecolor{color1}{RGB}{172,06,52} % Corporate Design Colour of University of Osnabrueck
 \definecolor{color2}{RGB}{207,208,209} % Corporate Design Colour of University of Osnabrueck
 \definecolor{color3}{RGB}{251,185,0} % Corporate Design Colour of University of Osnabrueck
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%----------------------------------------------------------------------------------------
+%	LISTING STYLE
+%----------------------------------------------------------------------------------------
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
 
 %----------------------------------------------------------------------------------------
 %	HYPERLINKS
@@ -183,6 +214,25 @@ The architecture is built as explained in section methods before. A class \textt
 	\label{fig:generator}
 \end{figure*}
 
+The \textbf{Encoder} extracts the feature of the original input image, for which convolutional layers are normally used \cite{Introduction-to-Cycle-GANs}. In \texttt{Cycle\_GAN\_Generator}, the encoder also consists of exactly three convolutional layers, as also described in \autoref{fig:generator}. The Keras class \texttt{Conv2D} is used for this. As activation function \ac{ReLu} is selected, for which the Keras class \texttt{ReLu} of the same name is used. Furthermore, the Keras class \texttt{InstanceNormalization} is used, which is a special form of group normalization, see \cite{google-tf-InstanceNormalization}, and is therefore suitable for the dataset used for the reimplementation. The peseudo code is described below:
+\begin{lstlisting}
+self.conv\_1 = tf.keras.layers.Conv2D(...)
+self.instance\_norm\_1 = tfa.layers.InstanceNormalization(...)
+self.activ\_1 = tf.keras.layers.ReLu()
+
+self.conv\_2 = tf.keras.layers.Conv2D(...)
+self.instance\_norm\_2 = tfa.layers.InstanceNormalization(...)
+self.activ\_2 = tf.keras.layers.ReLu()
+
+self.conv\_3 = tf.keras.layers.Conv2D(...)
+self.instance\_norm\_3 = tfa.layers.InstanceNormalization(...)
+self.activ\_3 = tf.keras.layers.ReLu()
+\end{lstlisting}
+
+The \textbf{Transformer} is needed to relate closely spaced features extracted from the input image by the previous encoder, \cite{Introduction-to-Cycle-GANs}. Therefore blocks of \acp{ResNet}, like shown in \autoref{fig:generator}, are used.
+
+
+The \textbf{Decoder}...
 
 
 \paragraph{Discriminator Class}
@@ -265,6 +315,7 @@ The architecture is built as explained in section methods before. A class \textt
 \acro{BAIR}[BAIR]{Berkeley AI Research}
 \acro{IANNWTF}[IANNWTF]{Implementing Artificial Networks with Tensorflow}
 \acro{GAN}[GAN]{Generative Adversarial Network}
+\acro{ReLu}[ReLu]{Rectified Linear Units}
 %\acroplural{Kuerzel}[Kurzform des Plurals]{Langform des Plurals}
 \end{acronym}
 
