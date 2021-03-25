@@ -16,7 +16,6 @@
 /Final_project/documentation/*.blg
 /Final_project/documentation/*.log
 /Final_project/documentation/*.out
-/Final_project/documentation/*.pdf
 /Final_project/documentation/*.gz
 /Final_project/documentation/*.toc
 *.aux
