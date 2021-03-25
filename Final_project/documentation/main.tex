@@ -135,18 +135,24 @@ On the basis of this it becomes clear that a simple back and forward translation
 \subsection{Formulation}
 In order to better understand the function and subsequent implementation of the losses, the mathematical background will be discussed in a bit more detail.
 
-\paragraph{Adversarial Loss} is also used in training of standard \ac{GAN}s.
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item description about background maths of the loss
-	\item equation of loss
-\end{enumerate}
+\paragraph{Adversarial Loss} is already used in training of standard \ac{GAN}s. It arises from the fact that the generator \textit{G} and discriminator \textit{D} work against each other. If the generator generates particularly good fake images that the discriminator can no longer identify as such, the loss of the discriminator automatically increases. On the other hand, the loss of the generator decreases. The loss behavior is similar the other way round. This is described mathematically in \cite{Source-GAN} as follows:
+\begin{equation*}
+\begin{split}
+\min_{G} \max_{D} V(D,G) =&~\mathbb E_{x \sim p_{data}(x)} [\log D(x)] \\\
+&+ \mathbb E_{z \sim p_{z}(z)} [\log (1-D(G(z)))]
+\end{split}
+\end{equation*}
 
+\paragraph{Cycle Consistency Loss} is used additionally to the adversarial loss in the Cycle-\ac{GAN}. The idea has already been briefly explained before, that a generator \textit{G} translates an image \textit{Input\_ A} from the domain \textit{X} into an image \textit{B} of the domain \textit{Y}. In the backward translation of generator \textit{F}, an image \textit{Cyclic\_ A} from domain \textit{X} will be created from the image \textit{B} of domain \textit{Y}. The difference between image \textit{Input\_ A} and \textit{Cyclic\_ A} forms the cycle consistency loss \cite{Introduction-to-Cycle-GANs}. This approach can be seen in \autoref{fig:simplified-cycle-gan} as a simplified architecture \cite{Introduction-to-Cycle-GANs}. Moreover in \cite{Introduction-to-Cycle-GANs}, the cycle consistency loss is described mathematically as follows:
+\begin{equation*}
+	Loss_{cyc}(G,F,X,Y) = \frac{1}{m} \sum^{m}_{i=1}[F(G(x_i))-x_i]+[G(F(y_i))-y_i]
+\end{equation*}
 
-\paragraph{Cycle Consistency Loss} is used additionally to the adversarial loss in the Cycle-\ac{GAN}.
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item description about background maths of the loss
-	\item equation of loss
-\end{enumerate}
+\begin{figure}[h] \centering 
+	\includegraphics[width=\linewidth]{simplified-cycle-gan}
+	\caption{A simplified architecture of a Cycle-\ac{GAN} \cite{Introduction-to-Cycle-GANs}}
+	\label{fig:simplified-cycle-gan}
+\end{figure}
 
 
 \subsection{Dataset}
