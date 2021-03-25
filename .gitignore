@@ -18,11 +18,3 @@
 /Final_project/documentation/*.out
 /Final_project/documentation/*.gz
 /Final_project/documentation/*.toc
-*.aux
-*.bbl
-*.blg
-*.log
-*.out
-*.pdf
-*.gz
-*.toc
