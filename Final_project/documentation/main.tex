@@ -361,12 +361,23 @@ Moreover, since two different sources for the three datasets are used, there are
 
 
 \subsection{Training}
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item Welche Schritte gibt es im Training? Generator/Discriminator
-	\item Welche Klassen/Funktionen wurden hierfür dann geschrieben?
-	\item Wo sind relevanten Werte gewählt worden? Warum wurden sie so gewählt?(z.B. Numbers of epoch?)
-\end{enumerate}
-In the papers implementation the identity loss is only used for the dataset \textit{cylce\_gan/monet2photo}. For better comparability between the different datasets, this was used in the reimplementation for all datasets.
+Three training epochs are chosen with each epoch having 900 training steps. With these numbers, the training can still be done in a reasonable amount of time. To make the training clearer, various functions have been programmed for different steps in the execution of the program.
+ 
+In the first step the generators are trained. The training starts with taking an image-label pair from domain A and from domain B with the help of the function \texttt{generate\_real\_dataset}. These pairs are randomly taken from the domains again for each training step. Afterwards the training for the \texttt{generator\_A\_to\_B} takes place and then for the generator \texttt{generator\_B\_to\_A}. Here for, the function \texttt{generator\_train\_step} was programmed, in which the adversarial loss (\texttt{adv\_loss}), the identity loss (\texttt{id\_loss}), the cycle consistency loss for the forward (\texttt{for\_loss}) and backward cycle (\texttt{back\_loss}) and the entire training loss (\texttt{train\_loss}) is computed. The training loss is composed of all other losses as follows:
+\begin{equation*}
+\begin{split}
+train\_loss = &~(1 * adv\_loss) \\
+&+ (10 * (for\_loss + back\_loss)) \\
+&+ (5 * id\_loss)
+\end{split}
+\end{equation*}
+In the papers implementation the identity loss is only used for the dataset \textit{cylce\_gan/monet2photo}. For better comparability between the different datasets, this was used to calculate the training loss in the reimplementation for all datasets. The training loss is then used in this function to update the generator parameters. To update the gradients of the generators, the loss function \textit{MeanAbsoluteError} is used. To update the generator parameters the optimizer \textit{Adam} is used.~\cite{image-to-image-ccan, google-Adam, google-GradientTape}
+
+In the second step of each training step, the discriminators are trained. 
+
+
+
+
 
 \subsection{Test}
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
