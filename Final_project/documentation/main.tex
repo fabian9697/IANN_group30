@@ -144,9 +144,9 @@ As a transfer performance, our goal is not to teach our network the same transla
 \subsection{Architectures}
 As the basis of the network architecture, the \ac{GAN} already known through the \ac{IANNWTF} module is extended to the Cycle-\ac{GAN} known through the paper \cite{image-to-image-ccan}.
 
-\paragraph{\acl{GAN}s} basically exist out of two neural networks, which more or less battle against each other, the \textit{Generator} and \textit{Discriminator}. The Generator takes the input and generates a fake image out of it, while the Discriminator tries to discriminate between generated and true images. Both parts of the network are trained individually from each other. The loss used in training is the adveresarial loss.~\cite{Introduction-to-Cycle-GANs, GAN-Courseware}
+\paragraph{\acl{GAN}s} basically exist out of two neural networks, which more or less battle against each other, the \textit{Generator} and \textit{Discriminator}. The Generator takes the input and generates a fake image out of it, while the Discriminator tries to discriminate between generated and true images. Both parts of the network are trained individually from each other. The loss used in training is the adversarial loss.~\cite{Introduction-to-Cycle-GANs, GAN-Courseware}
 
-\paragraph{Cycle-\ac{GAN}s} extend this concept, in terms of unpaired image-to-image translation. As mentioned in the introduction, the choosen paper uses domains of input \textit{D\textsubscript{x}} and output images \textit{D\textsubscript{y}}. The Generator is trained two main functions. Generating images from domain \textit{D\textsubscript{x}} to images of domain \textit{D\textsubscript{y}} ($G: X \rightarrow Y$) and vice versa ($F: Y \rightarrow X$). This principle is shown in \autoref{fig:mappingFunctions}.~\cite{image-to-image-ccan}
+\paragraph{Cycle-\ac{GAN}s} extend this concept, in terms of unpaired image-to-image translation. As mentioned in the introduction, the chosen paper uses domains of input \textit{D\textsubscript{x}} and output images \textit{D\textsubscript{y}}. The Generator is trained two main functions. Generating images from domain \textit{D\textsubscript{x}} to images of domain \textit{D\textsubscript{y}} ($G: X \rightarrow Y$) and vice versa ($F: Y \rightarrow X$). This principle is shown in \autoref{fig:mappingFunctions}.~\cite{image-to-image-ccan}
 
 \begin{figure} \centering 
 % Using \begin{figure*} makes the figure take up the entire width of the page
@@ -168,7 +168,7 @@ On the basis of this it becomes clear that a simple back and forward translation
 \subsection{Formulation}
 In order to better understand the function and subsequent implementation of the losses, the mathematical background will be discussed in a bit more detail.
 
-\paragraph{Adversarial Loss} is already used in training of standard \ac{GAN}s. It arises from the fact that the generator \textit{G} and discriminator \textit{D} work against each other. If the generator generates particularly good fake images that the discriminator can no longer identify as such, the loss of the discriminator automatically increases. On the other hand, the loss of the generator decreases. The loss behavior is similar the other way round. This is described mathematically in \cite{Source-GAN} as follows:
+\paragraph{Adversarial Loss} is already used in training of standard \ac{GAN}s. It arises from the fact that the generator \textit{G} and discriminator \textit{D} work against each other. If the generator generates particularly good fake images that the discriminator can no longer identify as such, the loss of the discriminator automatically increases. On the other hand, the loss of the generator decreases. The loss behaviour is similar the other way round. This is described mathematically in \cite{Source-GAN} as follows:
 \begin{equation*}
 \begin{split}
 \min_{G} \max_{D} V(D,G) =&~\mathbb E_{x \sim p_{data}(x)} [\log D(x)] \\\
@@ -181,7 +181,7 @@ In order to better understand the function and subsequent implementation of the 
 	Loss_{cyc}(G,F,X,Y) = \frac{1}{m} \sum^{m}_{i=1}[F(G(x_i))-x_i]+[G(F(y_i))-y_i]
 \end{equation*}
 
-In summary, the Cycle-\ac{GAN} is built from two generators, \textit{Generator A2B} and \textit{Generator B2A}, and two discriminators, \textit{Discriminator A} und \textit{Discriminator B}. This architecture is shown simplified in \autoref{fig:simplified-cycle-gan}.
+In summary, the Cycle-\ac{GAN} is built from two generators, \textit{Generator A2B} and \textit{Generator B2A}, and two discriminators, \textit{Discriminator A} and \textit{Discriminator B}. This architecture is shown simplified in \autoref{fig:simplified-cycle-gan}.
 
 \begin{figure}[htb] 
 	\centering 
@@ -190,7 +190,7 @@ In summary, the Cycle-\ac{GAN} is built from two generators, \textit{Generator A
 	\label{fig:simplified-cycle-gan}
 \end{figure}
 
-\paragraph{Identity Loss} is also introduced in the paper \cite{image-to-image-ccan}. The loss is a regularization technic for the generator, to provide a better performs if the input is already near to the predicted output image. Mathematically the identity loss is defined in the paper \cite{image-to-image-ccan} as follows:
+\paragraph{Identity Loss} is also introduced in the paper \cite{image-to-image-ccan}. The loss is a regularization technology for the generator, to provide a better performs if the input is already near to the predicted output image. Mathematically the identity loss is defined in the paper \cite{image-to-image-ccan} as follows:
 \begin{equation*}
 \begin{split}
 	Loss_{identity}(G,F) =&~\mathbb E_{y \sim p_{data}(y)}[||G(y) - y||_1] \\\
@@ -202,7 +202,7 @@ In summary, the Cycle-\ac{GAN} is built from two generators, \textit{Generator A
 \subsection{Datasets}
 In addition to the architecture, a suitable datasets also had to be selected. On the one hand, it should be versatile, but on the other hand, it must not contain too large images so that the computing time is not too high. 
 
-\paragraph{Tensorflow} provides different dataset specifically for Cycle-\ac{GAN}s including apple and orange images as well as photo and monet images. These ones are called \textit{cycle\_gan/apple2orange} and \textit{cycle\_gan/monet2photo}. The datasets contain two domains A and B each for training and test data. \autoref{tab:dataset} shows the four parts of the default configuration with the number of examples included in each dataset. Each example consist of image-label pairs.~\cite{google-tf-datasets}
+\paragraph{Tensorflow} provides different dataset specifically for Cycle-\ac{GAN}s including apple and orange images as well as photo and Monet images. These ones are called \textit{cycle\_gan/apple2orange} and \textit{cycle\_gan/monet2photo}. The datasets contain two domains A and B each for training and test data. \autoref{tab:dataset} shows the four parts of the default configuration with the number of examples included in each dataset. Each example consist of image-label pairs.~\cite{google-tf-datasets}
 
 \begin{table}[htb]
 \centering
@@ -233,7 +233,7 @@ In addition to the architecture, a suitable datasets also had to be selected. On
 \end{table}
 %------------------------------------------------
 \section{Implementation}
-The implementation is performed using the learned three steps, pre-processing, training and test from the module \ac{IANNWTF} \cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle-\ac{GAN} architecture. Furthermore, other functions of the Tensorflow and Keras libraries are used in all parts of the implementation. Therefore, \texttt{tensorflow}, \texttt{tensorflow\_datasets}, \texttt{tensor- flow\_addons} and \texttt{matplotlib.pyplot} are imported. How the implementation is realized and the different libaries are used, is now explained in more detailed.
+The implementation is performed using the learned three steps, pre-processing, training and test from the module \ac{IANNWTF} \cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle-\ac{GAN} architecture. Furthermore, other functions of the Tensorflow and Keras libraries are used in all parts of the implementation. Therefore, \texttt{tensorflow}, \texttt{tensorflow\_datasets}, \texttt{tensor- flow\_addons} and \texttt{matplotlib.pyplot} are imported. How the implementation is realized and the different libraries are used, is now explained in more detailed.
 
 \subsection{Network Architecture}
 The architecture is built as explained in section methods before. A class \texttt{Cycle\_GAN\_Generator} and a class \texttt{Cycle\_ GAN\_Discriminator} are programmed. Two instances of each of the two classes are then created, the \texttt{generator\_A \_to\_B} and \texttt{generator\_B\_to\_A}, and the \texttt{discriminator \_A} and \texttt{discriminator\_B}.
@@ -247,7 +247,7 @@ The architecture is built as explained in section methods before. A class \textt
 	\label{fig:generator}
 \end{figure*}
 
-The \textbf{Encoder} extracts the feature of the original input image, for which convolutional layers are normally used \cite{Introduction-to-Cycle-GANs}. In \texttt{Cycle\_GAN\_Generator}, the encoder also consists of exactly three convolutional layers, as also described in \autoref{fig:generator}. The Keras class \texttt{Conv2D} is used for this. As activation function \ac{ReLu} is selected, for which the Keras class \texttt{ReLu} of the same name is used. Furthermore, the Keras class \texttt{InstanceNormalization} is used, which is a special form of group normalization, see \cite{google-tf-InstanceNormalization}, and is therefore suitable for the dataset used for the reimplementation. So that the training does not exceed the time frame of the project, only a quarter of the original filter sizes of the paper are used in each \texttt{Conv2D} layer. All other values for \texttt{kernel\_size}, \texttt{strides}, \texttt{activation}, \texttt{padding} and the \texttt{kernel\_initializer} are taken identically from the specifications of the paper. The specifications and values for the three \texttt{Conv2D} layers are shown in \autoref{tab:encoderValues}.~\cite{image-to-image-ccan}
+The \textbf{Encoder} extracts the feature of the original input image, for which convolutional layers are normally used \cite{Introduction-to-Cycle-GANs}. In \texttt{Cycle\_GAN\_Generator}, the encoder also consists of exactly three convolutional layers, as also described in \autoref{fig:generator}. The Keras class \texttt{Conv2D} is used for this. As activation function \ac{ReLu} is selected, for which the Keras class \texttt{ReLu} of the same name is used. Furthermore, the Keras class \texttt{InstanceNormalization} is used, which is a special form of group normalization, see \cite{google-tf-InstanceNormalization}, and is therefore suitable for the dataset used for the reimplementation. The normalization contains the argument axis, which is set to -1, which prevents the features per feature map from being normalized. So that the training does not exceed the time frame of the project, only a quarter of the original filter sizes of the paper are used in each \texttt{Conv2D} layer. All other values for \texttt{kernel\_size}, \texttt{strides}, \texttt{activation}, \texttt{padding} and the \texttt{kernel\_initializer} are taken identically from the specifications of the paper. The specifications and values for the three \texttt{Conv2D} layers are shown in \autoref{tab:encoderValues}.~\cite{image-to-image-ccan}
 
 \begin{table}[htb]
 \centering
@@ -263,9 +263,6 @@ The \textbf{Encoder} extracts the feature of the original input image, for which
 \makecell[cc]{\textbf{\texttt{kernel\_}} \\ \textbf{\texttt{initializer}}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} \\ \hline
 \end{tabular}
 \end{table}
-
-
-
 
 The \textbf{Transformer} is needed to relate closely spaced features extracted from the input image by the previous encoder \cite{Introduction-to-Cycle-GANs}. And this is exactly what the blocks of \acp{ResNet}, like shown in \autoref{fig:generator}, are needed for. Every \ac{ResNet} is build up by two \texttt{Conv2D} layers, two layers of \texttt{InstanceNormalization}, a \ac{ReLu} activation layer and a layer \texttt{Concatenate}, which is also a Keras class. A new class \texttt{ResNet\_Block}, which also inherits from the Keras class \texttt{Layer}, is implemented. All values for all layers are taken from the paper. The convolutional layer specifications are shown in \autoref{tab:transformerValues}.
 
@@ -286,25 +283,63 @@ The \textbf{Transformer} is needed to relate closely spaced features extracted f
 
 Instances of this class are created as a layer in the class \texttt{Cycle\_GAN\_Generator}. The number of instances depends on the instance variable \texttt{n\_resnet}, which is set to six by default. Six \ac{ResNet} blocks are used if the image size is \textit{128~x~128}, nine blocks are use for an image size of \textit{256~x~256} or higher~\cite{image-to-image-ccan}.
 
-The \textbf{Decoder} now leads back to an output image. For this, the low-level features are worked out with the help of the transpose convolution, see \cite{Introduction-to-Cycle-GANs}. To achieve this, the Keras class \texttt{Conv2DTranspose} is used in this part. Finally, as shown in \autoref{fig:generator}, another \texttt{Conv2D} is used, in conjunction with an activation function of the Keras class \texttt{tanh}. The values of the convolution layer specifications is found in \autoref{tab:decoderValues}.
+The \textbf{Decoder} now leads back to an output image. For this, the low-level features are worked out with the help of the transpose convolution, see \cite{Introduction-to-Cycle-GANs}. To achieve this, the Keras class \texttt{Conv2DTranspose} is used in this part. Finally, as shown in \autoref{fig:generator}, another \texttt{Conv2D} is used, in conjunction with an activation function of the Keras class \texttt{tanh}. The values of the transposed convolution layer specifications is found in \autoref{tab:decoderValues1}, for the convolutional layer specifications in \autoref{tab:decoderValues2}.
 
 \begin{table}[htb]
 \centering
-\caption{Values of the convolutional layer specifications in the transformer part of the class \texttt{Cycle\_GAN\_Genera-tor}~\cite{image-to-image-ccan}.}
-\label{tab:decoderValues}
-\begin{tabular}{c c c c}
-\textbf{variable} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Transpose}} \\ \textbf{\texttt{Layer 1}}} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Transpose}} \\ \textbf{\texttt{Layer 2}}} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 4}}} \\ \hline
-\textbf{\texttt{filters}} & 32 & 16 & 3 \\ \hline
-\textbf{\texttt{kernel\_size}} & (3,3) & (3,3) & (7,7) \\ \hline
-\textbf{\texttt{strides}} & (2,2) & (2,2) & (1,1) \\ \hline
-\textbf{\texttt{activation}} & None & None & None \\ \hline 
-\textbf{\texttt{padding}} & "same" & "same" & "same" \\ \hline
-\makecell[cc]{\textbf{\texttt{kernel\_}} \\ \textbf{\texttt{initializer}}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} \\ \hline
+\caption{Values of the transposed convolutional layer specifications in the decoder part of the class \texttt{Cycle\_GAN\_Generator}~\cite{image-to-image-ccan}.}
+\label{tab:decoderValues1}
+\begin{tabular}{c c c}
+\textbf{variable} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Transpose}} \\ \textbf{\texttt{Layer 1}}} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Transpose}} \\ \textbf{\texttt{Layer 2}}} \\ \hline
+\textbf{\texttt{filters}} & 32 & 16 \\ \hline
+\textbf{\texttt{kernel\_size}} & (3,3) & (3,3)  \\ \hline
+\textbf{\texttt{strides}} & (2,2) & (2,2)  \\ \hline
+\textbf{\texttt{activation}} & None & None  \\ \hline 
+\textbf{\texttt{padding}} & "same" & "same" \\ \hline
+\makecell[cc]{\textbf{\texttt{kernel\_}} \\ \textbf{\texttt{initializer}}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}}  \\ \hline
 \end{tabular}
 \end{table}
 
+\begin{table}[htb]
+\centering
+\caption{Values of the convolutional layer specifications in the decoder part of the class \texttt{Cycle\_GAN\_Generator}~\cite{image-to-image-ccan}.}
+\label{tab:decoderValues2}
+\begin{tabular}{c c}
+\textbf{variable} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 4}}} \\ \hline
+\textbf{\texttt{filters}} & 3 \\ \hline
+\textbf{\texttt{kernel\_size}} & (7,7) \\ \hline
+\textbf{\texttt{strides}} & (1,1) \\ \hline
+\textbf{\texttt{activation}} & None \\ \hline 
+\textbf{\texttt{padding}} & "same" \\ \hline
+\makecell[cc]{\textbf{\texttt{kernel\_}} \\ \textbf{\texttt{initializer}}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} \\ \hline
+\end{tabular}
+\end{table}
 
-\paragraph{Discriminator Class} also inherits from the Keras class \texttt{Layer}. In this reimplementation the class is just simple network, including different layers. Since it has an image as input and a simple decision vector as output, \texttt{Conv2D} layers, are associated with \texttt{InstanceNormalization} and different activation functions such as \texttt{ReLu} and \texttt{LeakyReLu}, see following pseudocode. The structure of the discriminator is shown in \autoref{fig:discriminator}. \cite{Introduction-to-Cycle-GANs}
+\paragraph{Discriminator Class} also inherits from the Keras class \texttt{La- yer}. In this reimplementation the class isn't a simple discriminator class, but a so called \textit{Patch\ac{GAN}}. This one is made up to not only output a single value, but a one-channel feature map of predictions. In this case the output refers to a \textit{70~x~70} receptive field of the original input. Since it has an image as input and a decision vector as output, \texttt{Conv2D} layers, are associated with \texttt{InstanceNormalization} and the activation function \texttt{LeakyReLu}. The values for the layers and there specifications are taken from the paper and are shown in \autoref{tab:discriminatorValues}. The original \texttt{filters} size here again is divided by four in the reimplementation to reduce training time. After first convolutional layer they didn't deliberately used \texttt{InstanceNormalization}. Last layer is a convolution to produce an output of 1-dimension. The structure of the discriminator is also shown in \autoref{fig:discriminator}. \cite{Introduction-to-Cycle-GANs}
+\begin{table}[htb]
+\centering
+\caption{Values of the convolutional layer specifications in the discriminator class \texttt{Cycle\_GAN\_Discriminator}\cite{image-to-image-ccan}.}
+\label{tab:discriminatorValues}
+\begin{tabular}{c c c c}
+\textbf{variable} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 1}}} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 2}}} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 3}}} \\ \hline
+\textbf{\texttt{filters}} & 16 & 32 & 64 \\ \hline
+\textbf{\texttt{kernel\_size}} & (4,4) & (4,4) & (4,4) \\ \hline
+\textbf{\texttt{strides}} & (2,2) & (2,2) & (2,2) \\ \hline
+\textbf{\texttt{activation}} & None & None & None\\ \hline 
+\textbf{\texttt{padding}} & "same" & "same" & "same" \\ \hline
+\makecell[cc]{\textbf{\texttt{kernel\_}} \\ \textbf{\texttt{initializer}}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} \\ \hline
+\end{tabular}
+
+\begin{tabular}{c c c}
+\makecell[cc]{\\ \textbf{variable}} & \makecell[cc]{\\ \textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 4}}} & \makecell[cc]{\\ \textbf{\texttt{Conv2D}} \\ \textbf{\texttt{OutputLayer}}} \\ \hline
+\textbf{\texttt{filters}} & 128 & 1 \\ \hline
+\textbf{\texttt{kernel\_size}} & (4,4) & (4,4) \\ \hline
+\textbf{\texttt{strides}} & (2,2) & (1,1) \\ \hline
+\textbf{\texttt{activation}} & None & sigmoid \\ \hline 
+\textbf{\texttt{padding}} & "same" & "same" \\ \hline
+\makecell[cc]{\textbf{\texttt{kernel\_}} \\ \textbf{\texttt{initializer}}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} & \makecell[cc]{\texttt{Random} \\ \texttt{Normal}} \\ \hline
+\end{tabular}
+\end{table}
 
 \begin{figure*}[htb] 
 	\centering 
@@ -313,48 +348,17 @@ The \textbf{Decoder} now leads back to an output image. For this, the low-level 
 	\label{fig:discriminator}
 \end{figure*}
 
-\begin{lstlisting}
-self.conv_1 = tf.keras.layers.Conv2D(...)
-??                                        
-self.activ_1 = tf.keras.layers.LeakyReLU(...)
-
-self.conv_2 = tf.keras.layers.Conv2D(...)
-self.instance_norm_2 = tfa.layers.InstanceNormalization(...)                                     
-self.activ_2 = tf.keras.layers.LeakyReLU(...)  
-
-self.conv_3 = tf.keras.layers.Conv2D(...)
-self.instance_norm_3 = tfa.layers.InstanceNormalization(...)                                     
-self.activ_3 = tf.keras.layers.LeakyReLU(...)    
-
-self.conv_4 = tf.keras.layers.Conv2D(...)
-self.instance_norm_4 = tfa.layers.InstanceNormalization(...)                                     
-self.activ_4 = tf.keras.layers.LeakyReLU(...)              
-
-self.patch_output = tf.keras.layers.Conv2D(...)
-\end{lstlisting}
-
-
 \subsection{Pre-Processing}
-In addition to creating the network architecture, the dataset must also be preprocessed. Since this is a Tensorflow dataset, it can be loaded more easily with the \texttt{tfds.load} function. When the dataset is loaded, it is also directly split into test and training data and requested as a 2-tuple structure (input, label). To ensure that all images are in the same format and that the training time is not too high, the images are subsequently resized to \textit{128x128}. The \texttt{image.resize} function of the Tensorflow library is used for this. After normalization and reshaping the tensor to \textit{128x128x3}, the dataset is shuffled and prefetched. Batching is omitted to facilitate the later definition of real samples in training. The pseudocode shows all pre-processing steps.
-\begin{lstlisting}
-train_data, test_data = tfds.load(...)
+In addition to creating the network architecture, the dataset must also be preprocessed. In order to implement easier switching between datasets and comparison versions, in addition to the reimplementation of the paper, different mechanisms were included. For switching between datasets, additional variables (\texttt{is\_selfie2anime\_dataset}, \texttt{is\_ap- ple2orange\_dataset}, \texttt{is\_monet2photo\_dataset}) were implemented to select the dataset to be pre-processed. At the beginning, these variables are used to select which dataset is to be loaded, by setting it \texttt{true}. Only one dataset can be loaded at a time. If several dataset arguments are set to true, the Kaggle dataset is preferred to the Tensorflow datasets due to the \texttt{if-elif-elif} query, and the \textit{apple2orange} dataset is preferred to the \textit{monet2photo} dataset.
 
-train_data = tf.image.resize each train_image to [128, 128]
-train_data = 2 * (each train_image / 255) -1)
-train_data = tf.reshape each train_image_tensor to [128, 128, 3]
-train_data = train_data.shuffle(...).prefetch(...)
+Additionally, the dataset size is set to 900 training samples and 100 test samples after pre-processing to have a comparable number of images, between the different datasets. 
 
-test_data = tf.image.resize each test_image to [128, 128]
-test_data = 2 * (each test_image / 255) -1)
-test_data = tf.reshape each test_image_tensor to [128, 128, 3]
-test_data = test_data.shuffle(...).prefetch(...)
-\end{lstlisting}
+Moreover, since two different sources for the three datasets are used, there are a few different steps for pre-processing between the Tensorflow and Kaggle datasets. 
 
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item Warum shuffel 32?
-	\item warum prefetch 32?
-	\item Warum bilinear ge resized?
-\end{enumerate}
+\paragraph{Tensorflow datasets} can be loaded more easily with the \texttt{tfds.load} function from the tensorflow library. In general there is more or less no difference between pre-processing \textit{cylce\_gan/apple2orange} or \textit{cylce\_gan/monet2photo} images. When the dataset is loaded, it is also directly split into test and training data, as well as in two domains for each, and requested as a 2-tuple structure (input, label). To ensure that all images are in the same format and that the training time is not too high, the images are subsequently resized to \textit{128~x~128}. After normalization to a value between $-1$ and $1$ ($2 * (img / 255) - 1$) and reshaping the tensor to \textit{128~x~128~x~3}, the dataset is shuffled and prefetched with a \texttt{buffer\_size} of 128. Batching is omitted, or rather set to one, to facilitate the later definition of real samples in training. All functions used are offered by the Tensorflow library. The values for arguments of the different pre-processing steps are taken directly from the paper.~\cite{image-to-image-ccan}
+
+\paragraph{Kaggle datasets} need a few more pre-processing steps, than Tensorflow ones. The dataset \textit{arnaud58/selfie2anime} is downloaded with Keras function \texttt{image\_dataset\_from\_ directory} and directly batched to one. Because the dataset comes up as one big file, in which the dataset is separated in the different classes mentioned in \autoref{tab:datasetKaggle}, see \cite{kaggle-dataset}, it then needs to be split manually. This is done by using the functions \texttt{take} and \texttt{skip}. Thereupon, the same steps are carried out as for the Tensorflow datasets mentioned before.
+
 
 \subsection{Training}
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
@@ -362,6 +366,7 @@ test_data = test_data.shuffle(...).prefetch(...)
 	\item Welche Klassen/Funktionen wurden hierfür dann geschrieben?
 	\item Wo sind relevanten Werte gewählt worden? Warum wurden sie so gewählt?(z.B. Numbers of epoch?)
 \end{enumerate}
+In the papers implementation the identity loss is only used for the dataset \textit{cylce\_gan/monet2photo}. For better comparability between the different datasets, this was used in the reimplementation for all datasets.
 
 \subsection{Test}
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
