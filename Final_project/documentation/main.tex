@@ -363,7 +363,7 @@ Moreover, since two different sources for the three datasets are used, there are
 \subsection{Training}
 Three training epochs are chosen with each epoch having 900 training steps. With these numbers, the training can still be done in a reasonable amount of time. To make the training clearer, various functions have been programmed for different steps in the execution of the program.
  
-In the first step the generators are trained. The training starts with taking an image-label pair from domain A and from domain B with the help of the function \texttt{generate\_real\_dataset}. These pairs are randomly taken from the domains again for each training step. Afterwards the training for the \texttt{generator\_A\_to\_B} takes place and then for the generator \texttt{generator\_B\_to\_A}. Here for, the function \texttt{generator\_train\_step} was programmed, in which the adversarial loss (\texttt{adv\_loss}), the identity loss (\texttt{id\_loss}), the cycle consistency loss for the forward (\texttt{for\_loss}) and backward cycle (\texttt{back\_loss}) and the entire training loss (\texttt{train\_loss}) is computed. The training loss is composed of all other losses as follows:
+In the first step the generators are trained. The training starts with taking an image-label pair from domain A and from domain B with the help of the function \texttt{generate\_real\_ dataset}. These pairs are randomly taken from the domains again for each training step. Afterwards the training for the \texttt{generator\_A\_to\_B} takes place and then for the generator \texttt{generator\_B\_to\_A}. Here for, the function \texttt{generator\_train\_step} was programmed, in which the adversarial loss (\texttt{adv\_loss}), the identity loss (\texttt{id\_loss}), the cycle consistency loss for the forward (\texttt{for\_loss}) and backward cycle (\texttt{back\_loss}) and the entire training loss (\texttt{train\_loss}) is computed. The training loss is composed of all other losses as follows:
 \begin{equation*}
 \begin{split}
 train\_loss = &~(1 * adv\_loss) \\
@@ -395,34 +395,41 @@ After the pure reimplementation of the Cycle-\ac{GAN}, two further improvements 
 \subsection{Regularized \ac{ResNet} Blocks}
 The first idea is taken from the original paper, see \cite{image-to-image-ccan}, and continued. Here also the Cycle-\ac{GAN} was already tested with options for the regularization. In this variant a further class for the \ac{ResNet} block, the \texttt{Regularized\_ResNet\_Block}, was programmed. This contains additionally a dropout layer, after the first convolutional layer. The dropout rate is assumed to be $0.5$.
 
+Since the code should be written lean and collected in one colab notebook, the generator class is passed another argument at initialization, the \texttt{Regularized\_Cycle\_GAN}. If this argument is set to \textit{false}, then the default \ac{ResNet} is used during initialization. Is this argument set to \textit{true} during initialization, the Cycle-\ac{GAN} is built with regularized \ac{ResNet} blocks.
+
+Beside the adjustment of the \ac{ResNet} blocks in the generator also the discriminator is adjusted. Already when initializing an instant of the discriminator class the argument \texttt{kernel\_regularizer} with a L2 loss regularizer is introduced with the convolutional layers. In the standard version of the Cycle-\ac{GAN} this is also initialized, but not used. In the training and test therefore also an argument, \texttt{Regularized\_ Cycle\_GAN}, is used, in order to control the computation of the loss dependent on it. If the argument is set to \textit{true}, the L2 loss for the discriminator is calculated and used for parameter adjustment.
+
+
 \subsection{Cycle Wasserstein\ac{GAN}}
+Furthermore, another method is introduced, according to \cite{wgan-improvement}. Here, instead of proceeding according to a simple \ac{GAN}, this is replaced by a \ac{WGAN}. This leads to the fact that first of all instead of the optimizer \textit{Adam}, the optimizer \textit{\ac{RMSProp}} is used. In addition, the weights in the discriminator are clipped, which also leads to the fact that the discriminator now has to be trained five times more than the generator. Furthermore, the \textit{sigmoid} activation is removed from the output layer of the discriminator. To implement all of this, a new class, \texttt{Cycle\_WGAN\_Discriminator}, is programmed for the \ac{WGAN} discriminator.
 
-
-%\begin{table}[hbt]
-%	\caption{Table of Grades}
-%	\centering
-%	\begin{tabular}{llr}
-%		\toprule
-%		\multicolumn{2}{c}{Name} \\
-%		\cmidrule(r){1-2}
-%		First name & Last Name & Grade \\
-%		\midrule
-%		John & Doe & $7.5$ \\
-%		Richard & Miles & $2$ \\
-%		\bottomrule
-%	\end{tabular}
-%	\label{tab:label}
-%\end{table}
+So that the network can also be included in the same lean colab notebook, the argument \texttt{Cycle\_WGAN} is introduced. If the argument is set to \textit{true}, then a Cycle-\ac{WGAN} is created, in the other case a standard Cycle-\ac{GAN}. Here then also the optimizer is initialized instead of as \textit{Adam}, as \textit{\ac{RMSProp}}.
 
 %------------------------------------------------
 
 \section{Results}
 
+\subsection{Training vs. Test}
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
 	\item Welche Ergebnisse erzielt das Training?
 	\item Welches Ergebnis erzielt der Test?
 \end{enumerate}
 
+\subsection{Comparison of datasets}
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item Welche Ergebnisse erzielt apple2orange?
+	\item Welche Ergebnisse erzielt monet2photo?
+	\item Welche Ergebnisse erzielt selfie2anime?
+	\item Welche Ergebnisse zielen sie im vergleich zu einander?
+\end{enumerate}
+
+\subsection{Comparison of network variations}
+\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
+	\item Welche Ergebnisse erzielt standard cycleGAN?
+	\item Welche Ergebnisse erzielt regularized cycle GAN?
+	\item Welche Ergebnisse erzielt wasserstein cycle gan?
+	\item Welche Ergebnisse zielen sie im vergleich zu einander?
+\end{enumerate}
 
 %------------------------------------------------
 
@@ -452,6 +459,8 @@ The first idea is taken from the original paper, see \cite{image-to-image-ccan},
 \acro{ReLu}[ReLu]{Rectified Linear Units}
 \acro{ResNet}[ResNet]{Residual Network}
 \acroplural{ResNet}[ResNet]{Residual Networks}
+\acro{RMSProp}[RMSProp]{Root Mean Squared Propagation}
+\acro{WGAN}[WGAN]{Wasserstein \ac{GAN}}
 %\acroplural{Kuerzel}[Kurzform des Plurals]{Langform des Plurals}
 \end{acronym}
 
