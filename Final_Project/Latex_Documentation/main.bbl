@@ -1,0 +1,84 @@
+\begin{thebibliography}{10}
+
+\bibitem{image-to-image-ccan}
+Jun-Yan Zhu; Taesung Park; Phillip Isola; Alexei~A. Efros.
+\newblock Unpaired image-to-image translation using cycle-consistent
+  adversarial networks.
+\newblock UC Berkeley, 2020. Berkeley AI Research (BAIR) laboratory.
+
+\bibitem{Introduction-to-Cycle-GANs}
+Aamir Jarda.
+\newblock A gentle introduction to cycle consistent adversarial networks.
+\newblock
+  https://towardsdatascience.com/a-gentle-introduction-to-cycle-consistent-adversarial-networks-6731c8424a87,
+  2020.
+
+\bibitem{GAN-Courseware}
+Leon Schmid; Nion Schuermeyer; Charlotte Lange;~Annemarie Witschas.
+\newblock 08 generative adversarial networks.
+\newblock http://www.studip.uni-osnabrueck.de, 2020.
+
+\bibitem{Source-GAN}
+Ian J. Goodfellow; Jean Pouget-Abadie; Mehdi Mirza; Bing Xu; David
+  Warde-Farley; Sherjil Ozair; Aaron Courville;~Yoshua Bengio.
+\newblock Generative adversarial nets.
+\newblock Montreal, 2014. University of Montreal.
+
+\bibitem{google-tf-datasets}
+Jun{-}Yan Zhu; Taesung Park; Phillip Isola; Alexei~A. Efros.
+\newblock cycle\_gan.
+\newblock https://www.tensorflow.org/datasets/catalog/cycle\_gan, 01 2021.
+\newblock Creative Commons Attribution 4.0 License.
+
+\bibitem{kaggle-dataset}
+Arnaud Rougetet.
+\newblock selfie2anime.
+\newblock https://www.kaggle.com/arnaud58/selfie2anime, 08 2019.
+\newblock Creative Commons Attribution 4.0 License.
+
+\bibitem{implementingANsCourseware02}
+Leon Schmid; Nion Schuermeyer; Charlotte Lange;~Annemarie Witschas.
+\newblock 02 training nn.
+\newblock http://www.studip.uni-osnabrueck.de, 2020.
+
+\bibitem{implementingANsCourseware03}
+Leon Schmid; Nion Schuermeyer; Charlotte Lange;~Annemarie Witschas.
+\newblock tfa.layers.instancenormalization.
+\newblock http://www.studip.uni-osnabrueck.de, 2020.
+
+\bibitem{google-tf-InstanceNormalization}
+Samual Marks;~Gabriel de~Marmiesse; Sean Morgan; Tzu-Wei Sung; Moritz Kroeger;
+  Kaixi Hou; David Honzatko; Aaron Mondal; Aakash Kumar Nain; Dimitry
+  Nikitin;~Autoih.
+\newblock tfa.layers.instancenormalization.
+\newblock
+  https://www.tensorflow.org/addons/api\_docs/python/tfa/layers/InstanceNormalization,
+  01 2021.
+\newblock Creative Commons Attribution 4.0 License.
+
+\bibitem{google-Adam}
+??
+\newblock tf.keras.optimizers.adam.
+\newblock https://www.tensorflow.org/api\_docs/python/tf/keras/optimizers/Adam,
+  02 2021.
+\newblock Creative Commons Attribution 4.0 License.
+
+\bibitem{google-GradientTape}
+??
+\newblock tf.gradienttape.
+\newblock https://www.tensorflow.org/api\_docs/python/tf/GradientTape, 02 2021.
+\newblock Creative Commons Attribution 4.0 License.
+
+\bibitem{oscillation}
+Ashish Shrivastava; Tomas Pfister; Oncel Tuzel; Josh Susskind; Wenda Wang;~Russ
+  Webb.
+\newblock Learning from simulated and unsupervised images through adversarial
+  training.
+\newblock Apple Inc, 2017.
+
+\bibitem{wgan-improvement}
+Weining Hu; Meng Li;~Xiaomeng Ju.
+\newblock Improved cyclegan for image-to-image translation.
+\newblock University of British Columbia, 2018.
+
+\end{thebibliography}
