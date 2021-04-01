@@ -1,5 +1,0 @@
-Tutorial:
-https://machinelearningmastery.com/how-to-develop-cyclegan-models-from-scratch-with-keras/
-
-Datasets:
-https://www.tensorflow.org/datasets/catalog/cycle_gan#cycle_ganapple2orange_default_config
