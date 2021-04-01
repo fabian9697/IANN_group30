@@ -6,3 +6,5 @@
 /Final_project/documentation/*.out
 /Final_project/documentation/*.gz
 /Final_project/documentation/*.toc
+/Final_Project/Latex_Documentation/*.toc
+/Final_Project/Latex_Documentation/*.gz
