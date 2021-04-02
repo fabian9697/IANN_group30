@@ -132,46 +132,49 @@
 
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
-As the basis of our project, we studied the paper \textit{Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks} from the \ac{BAIR} laboratory. The aim of the paper is to change different information in images. The developed network creates a new generated image based on an existing input image. Three different types of generated images are presented in this paper. A translation of a photograph to a painting by Monet, zebras to horses, and summer to winter and vice versa. The paper complements what has been learned in the module \ac{IANNWTF} by two essential building blocks, which basically depend on each other.~\cite{image-to-image-ccan}
+As the basis of this project, the paper \textit{Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks} from the \ac{BAIR} laboratory is studied. The aim of the paper is to change different information in images. The developed network creates a generated image based on an existing input image. Three different datasets for image generation are presented in this paper. A translation from a photo to a painting by Monet, from zebras to horses, and from summer to winter and vice versa in each case. The paper complements what has been learned in the module \ac{IANNWTF} by two essential building blocks that are basically interdependent.~\cite{image-to-image-ccan}
 
-Until now, training data was mostly available in input-output pairs. This means that in the example translation summer to winter, for each photo of a location in summer there also exists a photo of the same location in winter. Thus, the network previously learned translation using complete individual examples. In the case of the paper, however, a network is developed that is trained based on two domains. As training input, the network is fed a domain of, for example, summer images. The training output then contains a domain of winter images. The network learns the different properties of summer and winter based on these image domains.~\cite{image-to-image-ccan}
+Until now, training data was mostly available in input-output pairs. If one takes the translation from summer to winter as an example, this means that for every photo of a location in summer, there also exists a photo of the same location in winter. Thus, the network would learn the translation based on one-to-one examples. In contrast, in case of the paper, the network is trained based on two domains. So, the network learns the different properties of summer and winter based on random images belonging to one of the two domains. As a side effect, this significantly facilitates the acquisition of suitable datasets, since no direct correlation between the images of the two domains is necessary.~\cite{image-to-image-ccan}
 
-As a second building block, the simple \ac{GAN} as presented in \ac{IANNWTF} is extended into a so-called Cycle-\ac{GAN}. The name is based on the use of the Cycle Consistency Loss in the training phase. We reimplemented and tested such a Cycle-\ac{GAN} based on the paper.~\cite{image-to-image-ccan}
+The second building block, the \ac{GAN} as introduced in \ac{IANNWTF}, is extended to a so called Cycle\ac{GAN}. The name is motivated by the use of cycle consistency loss in the training phase.
+
+In this paper, the Cycle\ac{GAN} architecture (based on~\cite{image-to-image-ccan}) will be reimplemented and tested to obtain a more in-depth understanding of its benefits and drawbacks. Additionally, different variations of the classical Cycle\ac{GAN} are analyzed and their performances on different datasets compared.
 
 %------------------------------------------------
 
 \section{Methodology}
 
-As a transfer performance, our goal is not to teach our network the same translation as described in the paper.  Therefore, we decided to optimize our network to perform a translation from apple images to orange images and vice versa. For this, we had to select a suitable dataset, as well as to work out the methodological basics of the network architecture from the paper. In the following, these basics will be explained.
+The architecture described in this paper should be based on the classical Cycle\ac{GAN} approach, but must also enable some modifications for the implementation of variations. So, it has to work for different datasets and needs to have a well-organized structure that allows the architecture to be modified while maintaining a clear and understandable network design. Therefore, amomg other things, the methodological basics of the architecture from the paper have to be worked out. In the following, these basics will be explained.
 
 \subsection{Related approaches}
-As the basis of the network architecture, the \ac{GAN} already known through the \ac{IANNWTF} module is extended to the Cycle-\ac{GAN} known through the paper \cite{image-to-image-ccan}.
+First, an overview of related work for this paper is provided.
 
-\paragraph{\acl{GAN}s} basically exist out of two neural networks, which more or less battle against each other, the \textit{Generator} and \textit{Discriminator}. The Generator takes the input and generates a fake image out of it, while the Discriminator tries to discriminate between generated and true images. Both parts of the network are trained individually from each other. The loss used in training is the adversarial loss.~\cite{Introduction-to-Cycle-GANs, GAN-Courseware}
+\paragraph{\acl{GAN}s} basically consist of two neural networks which more or less compete with each other, the \textit{Generator} and the \textit{Discriminator}. The generator takes the input, often provided in form of an encoding, and generates a fake image from it, while the discriminator tries to discriminate between generated and real images. Both parts of the network are trained individually from each other. The loss used in training is the adversarial loss.~\cite{Introduction-to-Cycle-GANs, GAN-Courseware}
 
-\paragraph{Cycle-\ac{GAN}s} extend this concept, in terms of unpaired image-to-image translation. As mentioned in the introduction, the chosen paper uses domains of input \textit{D\textsubscript{x}} and output images \textit{D\textsubscript{y}}. The Generator is trained two main functions. Generating images from domain \textit{D\textsubscript{x}} to images of domain \textit{D\textsubscript{y}} ($G: X \rightarrow Y$) and vice versa ($F: Y \rightarrow X$). This principle is shown in \autoref{fig:mappingFunctions}.~\cite{image-to-image-ccan}
+\paragraph{Cycle\ac{GAN}s} extend this concept, in terms of unpaired image-to-image translation. As mentioned in the introduction, the chosen paper uses domains of input images \textit{D\textsubscript{x}} and output images \textit{D\textsubscript{y}}. The Generator is trained by two main functions: Generating images from domain \textit{D\textsubscript{x}} to images from domain \textit{D\textsubscript{y}} ($G: X \rightarrow Y$) and vice versa ($F: Y \rightarrow X$). This principle is shown in \autoref{fig:mappingFunctions}.~\cite{image-to-image-ccan}
 
 \begin{figure} \centering 
 % Using \begin{figure*} makes the figure take up the entire width of the page
 	\includegraphics[width=0.8\linewidth]{mappingFunctions}
-	\caption{Mapping functions of the Cycle-\ac{GAN}~\cite{image-to-image-ccan}}
+	\caption{Mapping functions of the Cycle\ac{GAN}~\cite{image-to-image-ccan}}
 	\label{fig:mappingFunctions}
 \end{figure}
 
-On the basis of this it becomes clear that a simple back and forward translation can lead to the fact that the back translation does not refer to exactly the original input image, but to another image within the input image domain. This is where the cycle consistency loss comes into play. This one is used in addition to the adversarial loss so that the network learns to return to the original image during a back and forward translation. The cycle consistency losses for the two mapping functions are shown in the \autoref{fig:cycleConsistencyLoss}.~\cite{image-to-image-ccan}
+From this, it can be inferred that a simple for- and backward translation may result in a back-translation that does not correspond to the original input image, but to a different image within the input image domain. To address this issue, cycle consistency loss is introduced. It is used in addition to the adversarial loss so that the network learns to return to the original image after a for- and backward translation. The cycle consistency losses for the two mapping functions are shown in the \autoref{fig:cycleConsistencyLoss}.~\cite{image-to-image-ccan}
 
 \begin{figure*}[htb] \centering 
 % Using \begin{figure*} makes the figure take up the entire width of the page
 	\includegraphics[width=\linewidth]{cycleConsistencyLoss}
-	\caption{Cycle Consistency Losses in the back and forward translation~\cite{image-to-image-ccan}}
+	\caption{Cycle Consistency Losses in the for- and backward translation~\cite{image-to-image-ccan}}
 	\label{fig:cycleConsistencyLoss}
 \end{figure*}
 
+\paragraph{Cycle Wasserstein\ac{GAN}s} are an improvement of the classical Cycle\ac{GAN}. This type was introduced due to the frequent training instabilites of Cycle\ac{GAN}s. CycleW\ac{GAN}s aim to overcome this issue by introducing the Wasserstein distance which has better continuity and differentiability properties in contrast to local saturated loss functions. Thus, the approach is intended to reduce the problem of vanishing gradients.~\cite{wgan-improvement}.
 
 \subsection{Formulation}
-In order to better understand the function and subsequent implementation of the losses, the mathematical background will be discussed in a bit more detail.
+For a better understanding of the function and the subsequent implementation of the losses, the mathematical background is explained in more detail.
 
-\paragraph{Adversarial Loss} is already used in training of standard \ac{GAN}s. It arises from the fact that the generator \textit{G} and discriminator \textit{D} work against each other. If the generator generates particularly good fake images that the discriminator can no longer identify as such, the loss of the discriminator automatically increases. On the other hand, the loss of the generator decreases. The loss behaviour is similar the other way round. This is described mathematically in \cite{Source-GAN} as follows:
+\paragraph{Adversarial Loss} is already used in the training of a \ac{GAN}s. It arises from the fact that the generator \textit{G} and discriminator \textit{D} compete with each other. If the generator generates particularly good fake images which the discriminator can no longer identify as such, the discriminator's loss automatically increases. On the other hand, the loss of the generator decreases. This behaviour is the same the other way round. It is mathematically described in \cite{Source-GAN} as follows:
 \begin{equation*}
 \begin{split}
 \min_{G} \max_{D} V(D,G) =&~\mathbb E_{x \sim p_{data}(x)} [\log D(x)] \\\
@@ -179,21 +182,21 @@ In order to better understand the function and subsequent implementation of the 
 \end{split}
 \end{equation*}
 
-\paragraph{Cycle Consistency Loss} is used additionally to the adversarial loss in the Cycle-\ac{GAN}. The idea has already been briefly explained before, that a generator \textit{G} translates an image \textit{Input\_ A} from the domain \textit{X} into an image \textit{B} of the domain \textit{Y}. In the backward translation of generator \textit{F}, an image \textit{Cyclic\_ A} from domain \textit{X} will be created from the image \textit{B} of domain \textit{Y}. The difference between image \textit{Input\_ A} and \textit{Cyclic\_ A} forms the cycle consistency loss \cite{Introduction-to-Cycle-GANs}. In \cite{Introduction-to-Cycle-GANs}, the cycle consistency loss is described mathematically as follows:
+\paragraph{Cycle Consistency Loss} is used in addition to the adversarial loss in the Cycle\ac{GAN}. As briefly explained before, a generator \textit{G} translates an image \textit{Input\_ A} from domain \textit{X} to an image \textit{B} from domain \textit{Y}. In the backward translation of the generator \textit{F}, an image \textit{Cyclic\_ A} from domain \textit{X} will be created using image \textit{B} from domain \textit{Y}. The difference between image \textit{Input\_ A} and \textit{Cyclic\_ A} forms the cycle consistency loss \cite{Introduction-to-Cycle-GANs}. In \cite{Introduction-to-Cycle-GANs}, the cycle consistency loss is mathematically described as follows:
 \begin{equation*}
 	Loss_{cyc}(G,F,X,Y) = \frac{1}{m} \sum^{m}_{i=1}[F(G(x_i))-x_i]+[G(F(y_i))-y_i]
 \end{equation*}
 
-In summary, the Cycle-\ac{GAN} is built from two generators, \textit{Generator A2B} and \textit{Generator B2A}, and two discriminators, \textit{Discriminator A} and \textit{Discriminator B}. This architecture is shown simplified in \autoref{fig:simplified-cycle-gan}.
+In summary, the Cycle\ac{GAN} is composed of two generators, \textit{Generator A2B} and \textit{Generator B2A}, as well as two discriminators, \textit{Discriminator A} and \textit{Discriminator B}. This architecture is shown in simplified form in \autoref{fig:simplified-cycle-gan}.
 
 \begin{figure}[htb] 
 	\centering 
 	\includegraphics[width=\linewidth]{simplified-cycle-gan}
-	\caption{A simplified architecture of a Cycle-\ac{GAN} \cite{Introduction-to-Cycle-GANs}}
+	\caption{A simplified architecture of a Cycle\ac{GAN} \cite{Introduction-to-Cycle-GANs}}
 	\label{fig:simplified-cycle-gan}
 \end{figure}
 
-\paragraph{Identity Loss} is also introduced in the paper \cite{image-to-image-ccan}. The loss is a regularization technology for the generator, to provide a better performs if the input is already near to the predicted output image. Mathematically the identity loss is defined in the paper \cite{image-to-image-ccan} as follows:
+\paragraph{Identity Loss} is also introduced in paper \cite{image-to-image-ccan}. The loss can be seen as a regularization technique for encouraging the generator to preserve the color composition between the input- and the output image. This is done by providing the generator real images from the target domain, with the goal to not translate them. Mathematically, the identity loss is defined as follows \cite{image-to-image-ccan}:
 \begin{equation*}
 \begin{split}
 	Loss_{identity}(G,F) =&~\mathbb E_{y \sim p_{data}(y)}[||G(y) - y||_1] \\\
@@ -201,15 +204,14 @@ In summary, the Cycle-\ac{GAN} is built from two generators, \textit{Generator A
 \end{split}
 \end{equation*}
 
-
 \subsection{Datasets}
-In addition to the architecture, a suitable datasets also had to be selected. On the one hand, it should be versatile, but on the other hand, it must not contain too large images so that the computing time is not too high. 
+In addition to the architecture, suitable datasets must be selected. These should be versatile and contain images that are suitable for the classification into two domains.
 
-\paragraph{Tensorflow} provides different dataset specifically for Cycle-\ac{GAN}s including apple and orange images as well as photo and Monet images. These ones are called \textit{cycle\_gan/apple2orange} and \textit{cycle\_gan/monet2photo}. The datasets contain two domains A and B each for training and test data. \autoref{tab:dataset} shows the four parts of the default configuration with the number of examples included in each dataset. Each example consist of image-label pairs.~\cite{google-tf-datasets}
+\paragraph{Tensorflow} provides different datasets specifically suited for Cycle\ac{GAN}s including for example apple and orange domains as well as photo and Monet painting domains. These are called \textit{cycle\_gan/apple2orange} and \textit{cycle\_gan/monet2photo}. The datasets are divided into training and test datasets. \autoref{tab:datasetTF} shows the four parts of the standard configuration with the number of examples included in each dataset. Every example consist of image-label pairs.~\cite{google-tf-datasets}
 
 \begin{table}[htb]
 \centering
-\caption{Structure of the standard configuration split of the Tensorflow dataset \textit{cycle\_gan/apple2orange} and \textit{cycle\_gan/monet2photo}~\cite{google-tf-datasets}}
+\caption{Structure of the standard configuration split of the Tensorflow datasets \textit{cycle\_gan/apple2orange} and \textit{cycle\_gan/monet2photo}~\cite{google-tf-datasets}}
 \label{tab:datasetTF}
 \begin{tabular}{c c c}
 \textbf{index} & \makecell[cc]{\textbf{examples} \\ \textbf{\texttt{apple2orange}}} & \makecell[cc]{\textbf{examples} \\ \textbf{\texttt{monet2photo}}}\\ \hline
@@ -220,7 +222,7 @@ In addition to the architecture, a suitable datasets also had to be selected. On
 \end{tabular}
 \end{table}
 
-\paragraph{Kaggle} provides another dataset \textit{arnaud58/selfie2anime}. In order to make a further comparison, another dataset from a different library was deliberately selected. This one contains images of anime and images of women selfies. The examples included in this dataset are shown in \autoref{tab:datasetKaggle}. \cite{kaggle-dataset}
+\paragraph{Kaggle} provides another dataset called \textit{arnaud58/selfie2anime}. This one is selected to analyze the performance of the Cycle\ac{GAN} on a dataset which was not part of the classical Cycle\ac{GAN} paper~\cite{image-to-image-ccan}. It contains images of animes and women selfies. The number of examples included in this dataset are shown in \autoref{tab:datasetKaggle}. \cite{kaggle-dataset}
 
 \begin{table}[htb]
 \centering
@@ -236,25 +238,25 @@ In addition to the architecture, a suitable datasets also had to be selected. On
 \end{table}
 %------------------------------------------------
 \section{Implementation}
-The implementation is performed using the learned three steps, pre-processing, training and test from the module \ac{IANNWTF} \cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle-\ac{GAN} architecture. Furthermore, other functions of the Tensorflow and Keras libraries are used in all parts of the implementation. Therefore, \texttt{tensorflow}, \texttt{tensorflow\_datasets}, \texttt{tensor- flow\_addons} and \texttt{matplotlib.pyplot} are imported. How the implementation is realized and the different libraries are used, is now explained in more detailed.
+The implementation is performed using the taught three steps from the module \ac{IANNWTF}: pre-processing, training and test~\cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle\ac{GAN} architecture. Furthermore, functions of the Tensorflow and Keras libraries are utilized in nearly every part of the implementation. The realization of the implementation and usage of the different libraries is now explained in more detail.
 
 \subsection{Network Architecture}
-The architecture is built as explained in section methods before. A class \texttt{Cycle\_GAN\_Generator} and a class \texttt{Cycle\_ GAN\_Discriminator} are programmed. Two instances of each of the two classes are then created, the \texttt{generator\_A \_to\_B} and \texttt{generator\_B\_to\_A}, and the \texttt{discriminator \_A} and \texttt{discriminator\_B}.
+The architecture is built as explained in the section before. A class \texttt{Cycle\_GAN\_Generator} and a class \texttt{Cycle\_GAN\_ Discriminator} are implemented. In the following, two instances of each class are created, \texttt{generator\_A\_to\_B} and \texttt{generator\_B\_to\_A} as well as \texttt{discriminator\_A} and \texttt{discriminator\_B}.
 
-\paragraph{Generator Class} inherits from the Keras class \texttt{Layer}. The class in general is build up of three parts, the \textit{Encoder}, \textit{Transformer} and \textit{Decoder}. Each part consists again out of different layers. The structure of the generator is shown in \autoref{fig:generator}.~\cite{Introduction-to-Cycle-GANs}
+\paragraph{Generator Class} inherits from the Keras class \texttt{Layer}. In general, the class is build up of three parts, the \textit{Encoding}, the \textit{Transformation} and the \textit{Decoding}. Each part again consists of different layers. The structure of the generator is shown in \autoref{fig:generator}.~\cite{Introduction-to-Cycle-GANs}
 
 \begin{figure*}[htb] 
 	\centering 
 	\includegraphics[width=\linewidth]{generator}
-	\caption{The high-level structure of the Cycle-\ac{GAN}s generator \cite{Introduction-to-Cycle-GANs}}
+	\caption{The high-level structure of the Cycle\ac{GAN}'s generator \cite{Introduction-to-Cycle-GANs}}
 	\label{fig:generator}
 \end{figure*}
 
-The \textbf{Encoder} extracts the feature of the original input image, for which convolutional layers are normally used \cite{Introduction-to-Cycle-GANs}. In \texttt{Cycle\_GAN\_Generator}, the encoder also consists of exactly three convolutional layers, as also described in \autoref{fig:generator}. The Keras class \texttt{Conv2D} is used for this. As activation function \ac{ReLu} is selected, for which the Keras class \texttt{ReLu} of the same name is used. Furthermore, the Keras class \texttt{InstanceNormalization} is used, which is a special form of group normalization, see \cite{google-tf-InstanceNormalization}, and is therefore suitable for the dataset used for the reimplementation. The normalization contains the argument axis, which is set to -1, which prevents the features per feature map from being normalized. So that the training does not exceed the time frame of the project, only a quarter of the original filter sizes of the paper are used in each \texttt{Conv2D} layer. All other values for \texttt{kernel\_size}, \texttt{strides}, \texttt{activation}, \texttt{padding} and the \texttt{kernel\_initializer} are taken identically from the specifications of the paper. The specifications and values for the three \texttt{Conv2D} layers are shown in \autoref{tab:encoderValues}.~\cite{image-to-image-ccan}
+The \textbf{Encoding} extracts the features of the original input image. In \texttt{Cycle\_GAN\_Generator}, the encoding consists of exactly three convolutional layers, as depicted in \autoref{fig:generator}. The Keras class \texttt{Conv2D} is used for this. As activation function \ac{ReLu} are selected, using the Keras class \texttt{ReLu}. Furthermore, the Keras class \texttt{InstanceNormalization} is utilized to enable this special form of group normalization (see \cite{google-tf-InstanceNormalization} for more details). Instance Normalization is well-suited for the datasets with batch size 1 as recommended by the paper. The filter sizes of each \texttt{Conv2D} layer are quartered to reduce the complexity and enable a faster training of the Cycle\ac{GAN}. All other relevant parameters like \texttt{kernel\_size}, \texttt{strides}, \texttt{activation}, \texttt{padding} and the \texttt{kernel\_initializer} are taken from the paper. The specifications and values for the three \texttt{Conv2D} layers are shown in \autoref{tab:encoderValues}.~\cite{image-to-image-ccan}
 
 \begin{table}[htb]
 \centering
-\caption{Values of all convolutional layer specifications in the encoder part of the class \texttt{Cycle\_GAN\_Generator}~\cite{image-to-image-ccan}.}
+\caption{Values of the convolutional layer specifications in the encoding part of the class \texttt{Cycle\_GAN\_Generator}~\cite{image-to-image-ccan}.}
 \label{tab:encoderValues}
 \begin{tabular}{c c c c}
 \textbf{variable} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 1}}} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 2}}} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 3}}} \\ \hline
@@ -267,11 +269,11 @@ The \textbf{Encoder} extracts the feature of the original input image, for which
 \end{tabular}
 \end{table}
 
-The \textbf{Transformer} is needed to relate closely spaced features extracted from the input image by the previous encoder \cite{Introduction-to-Cycle-GANs}. And this is exactly what the blocks of \acp{ResNet}, like shown in \autoref{fig:generator}, are needed for. Every \ac{ResNet} is build up by two \texttt{Conv2D} layers, two layers of \texttt{InstanceNormalization}, a \ac{ReLu} activation layer and a layer \texttt{Concatenate}, which is also a Keras class. A new class \texttt{ResNet\_Block}, which also inherits from the Keras class \texttt{Layer}, is implemented. All values for all layers are taken from the paper. The convolutional layer specifications are shown in \autoref{tab:transformerValues}.
+The \textbf{Transformation} is needed to relate closely spaced features extracted from the input image by the previous encoding \cite{Introduction-to-Cycle-GANs}. And this is exactly what the blocks of \acp{ResNet}, like shown in \autoref{fig:generator}, are needed for. Every \ac{ResNet} is build up by two \texttt{Conv2D} layers, two layers of \texttt{InstanceNormalization}, a \ac{ReLu} activation layer and a layer \texttt{Concatenate}, which is also a Keras class. A new class \texttt{ResNet\_Block}, which also inherits from the Keras class \texttt{Layer}, is implemented. All values for the layers are taken from the paper. The convolutional layer specifications are shown in \autoref{tab:transformerValues}.
 
 \begin{table}[htb]
 \centering
-\caption{Values of the convolutional layer specifications in the transformer part of each \ac{ResNet} block of the class \texttt{ResNet\_Block}~\cite{image-to-image-ccan}.}
+\caption{Values of the convolutional layer specifications in the \ac{ResNet} block (part of the transformation part of the class \texttt{Cycle\_GAN\_Generator}~\cite{image-to-image-ccan}.}
 \label{tab:transformerValues}
 \begin{tabular}{c c c}
 \textbf{variable} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 1}}} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 2}}} \\ \hline
@@ -286,11 +288,11 @@ The \textbf{Transformer} is needed to relate closely spaced features extracted f
 
 Instances of this class are created as a layer in the class \texttt{Cycle\_GAN\_Generator}. The number of instances depends on the instance variable \texttt{n\_resnet}, which is set to six by default. Six \ac{ResNet} blocks are used if the image size is \textit{128~x~128}, nine blocks are use for an image size of \textit{256~x~256} or higher~\cite{image-to-image-ccan}.
 
-The \textbf{Decoder} now leads back to an output image. For this, the low-level features are worked out with the help of the transpose convolution, see \cite{Introduction-to-Cycle-GANs}. To achieve this, the Keras class \texttt{Conv2DTranspose} is used in this part. Finally, as shown in \autoref{fig:generator}, another \texttt{Conv2D} is used, in conjunction with an activation function of the Keras class \texttt{tanh}. The values of the transposed convolution layer specifications is found in \autoref{tab:decoderValues1}, for the convolutional layer specifications in \autoref{tab:decoderValues2}.
+The \textbf{Decoding} now leads back to an output image. For this, the low-level features are worked out with the help of the transpose convolution, see \cite{Introduction-to-Cycle-GANs}. To achieve this, the Keras class \texttt{Conv2DTranspose} is used in this part. Finally, as shown in \autoref{fig:generator}, another \texttt{Conv2D} is used, in conjunction with an activation function of the Keras class \texttt{tanh}. The values of the transposed convolution layer specifications is found in \autoref{tab:decoderValues1}, for the convolutional layer specifications in \autoref{tab:decoderValues2}.
 
 \begin{table}[htb]
 \centering
-\caption{Values of the transposed convolutional layer specifications in the decoder part of the class \texttt{Cycle\_GAN\_Generator}~\cite{image-to-image-ccan}.}
+\caption{Values of the transposed convolutional layer specifications in the decoding part of the class \texttt{Cycle\_GAN\_Generator}~\cite{image-to-image-ccan}.}
 \label{tab:decoderValues1}
 \begin{tabular}{c c c}
 \textbf{variable} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Transpose}} \\ \textbf{\texttt{Layer 1}}} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Transpose}} \\ \textbf{\texttt{Layer 2}}} \\ \hline
@@ -305,7 +307,7 @@ The \textbf{Decoder} now leads back to an output image. For this, the low-level 
 
 \begin{table}[htb]
 \centering
-\caption{Values of the convolutional layer specifications in the decoder part of the class \texttt{Cycle\_GAN\_Generator}~\cite{image-to-image-ccan}.}
+\caption{Values of the convolutional layer specifications in the decoding part of the class \texttt{Cycle\_GAN\_Generator}~\cite{image-to-image-ccan}.}
 \label{tab:decoderValues2}
 \begin{tabular}{c c}
 \textbf{variable} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 4}}} \\ \hline
@@ -347,7 +349,7 @@ The \textbf{Decoder} now leads back to an output image. For this, the low-level 
 \begin{figure*}[htb] 
 	\centering 
 	\includegraphics[width=0.8\linewidth]{discriminator}
-	\caption{The high-level structure of the Cycle-\ac{GAN}s discriminator \cite{Introduction-to-Cycle-GANs}}
+	\caption{The high-level structure of the Cycle\ac{GAN}'s discriminator \cite{Introduction-to-Cycle-GANs}}
 	\label{fig:discriminator}
 \end{figure*}
 
@@ -387,26 +389,26 @@ For the representation and storage of the results further functions were program
 \begin{figure}[htb] 
 	\centering 
 	\includegraphics[width=\linewidth]{fileStructure}
-	\caption{The folder structure of storing data in the Google Drive from the Colab script.}
+	\caption{The folder structure to store the data in Google Drive.}
 	\label{fig:fileStructure}
 \end{figure}
 
 %------------------------------------------------
 \section{Variations of the Cycle\ac{GAN}}
-After the pure reimplementation of the Cycle-\ac{GAN}, two further improvements are implemented. All three variants are then compared with each other. The implementation of the two improved variants is explained in more detail in the following two subsections.
+After the pure reimplementation of the Cycle\ac{GAN}, two further improvements are implemented. All three variants are then compared with each other. The implementation of the two improved variants is explained in more detail in the following two subsections.
 
 \subsection{Regularized Cycle GAN}
-The first idea is taken from the original paper, see \cite{image-to-image-ccan}, and continued. Here also the Cycle-\ac{GAN} was already tested with options for the regularization. In this variant a further class for the \ac{ResNet} block, the \texttt{Regularized\_ResNet\_Block}, was programmed. This contains additionally a dropout layer, after the first convolutional layer. The dropout rate is assumed to be $0.5$.
+The first idea is taken from the original paper, see \cite{image-to-image-ccan}, and continued. Here, the Cycle\ac{GAN} was already tested with options for regularization. In this variant a further class for the \ac{ResNet} block, the \texttt{Regularized\_ResNet\_Block}, is programmed. This contains an additional dropout layer after the first convolutional layer. The dropout rate is assumed to be $0.5$.
 
-Since the code should be written lean and collected in one colab notebook, the generator class is passed another argument at initialization, the \texttt{Regularized\_Cycle\_GAN}. If this argument is set to \textit{false}, then the default \ac{ResNet} is used during initialization. Is this argument set to \textit{true} during initialization, the Cycle-\ac{GAN} is built with regularized \ac{ResNet} blocks.
+Since the code should be written lean and collected in one colab notebook, the generator class is passed another argument at initialization, the \texttt{Regularized\_Cycle\_GAN}. If this argument is set to \textit{false}, then the default \ac{ResNet} is used during initialization. Is this argument set to \textit{true} during initialization, the Cycle\ac{GAN} is built with regularized \ac{ResNet} blocks.
 
-Beside the adjustment of the \ac{ResNet} blocks in the generator also the discriminator is adjusted. Already when initializing an instant of the discriminator class the argument \texttt{kernel\_regularizer} with a L2 loss regularizer is introduced with the convolutional layers. In the standard version of the Cycle-\ac{GAN} this is also initialized, but not used. In the training and test therefore also an argument, \texttt{Regularized\_ Cycle\_GAN}, is used, in order to control the computation of the loss dependent on it. If the argument is set to \textit{true}, the L2 loss for the discriminator is calculated and used for parameter adjustment.
+Beside the adjustment of the \ac{ResNet} blocks in the generator, also the discriminator is adjusted. Already when initializing an instance of the discriminator class, the argument \texttt{kernel\_regularizer} with a L2 regularization loss is introduced to the convolutional layers. In the standard version of the Cycle\ac{GAN} this is also initialized, but not used. Therefore, the argument \texttt{Regularized\_Cycle\_GAN} is passed to the training step of the discriminator to control the computation of the loss dependent on it. If the argument is set to \textit{true}, the L2 loss for the discriminator is added and used for backpropagation.
 
 
 \subsection{Cycle Wasserstein\ac{GAN}}
 Furthermore, another method is introduced, according to \cite{wgan-improvement}. Here, instead of proceeding according to a simple \ac{GAN}, this is replaced by a \ac{WGAN}. This leads to the fact that first of all instead of the optimizer \textit{Adam}, the optimizer \textit{\ac{RMSProp}} is used. In addition, the weights in the discriminator are clipped, which also leads to the fact that the discriminator now has to be trained five times more than the generator. Furthermore, the \textit{sigmoid} activation is removed from the output layer of the discriminator. To implement all of this, a new class, \texttt{Cycle\_WGAN\_Discriminator}, is programmed for the \ac{WGAN} discriminator.
 
-So that the network can also be included in the same lean colab notebook, the argument \texttt{Cycle\_WGAN} is introduced. If the argument is set to \textit{true}, then a Cycle-\ac{WGAN} is created, in the other case a standard Cycle-\ac{GAN}. Here then also the optimizer is initialized instead of as \textit{Adam}, as \textit{\ac{RMSProp}}.
+So that the network can also be included in the same lean colab notebook, the argument \texttt{Cycle\_WGAN} is introduced. If the argument is set to \textit{true}, then a Cycle-\ac{WGAN} is created, in the other case a standard Cycle\ac{GAN}. Here then also the optimizer is initialized instead of as \textit{Adam}, as \textit{\ac{RMSProp}}.
 
 %------------------------------------------------
 
