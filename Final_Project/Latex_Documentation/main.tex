@@ -408,14 +408,24 @@ So that the network can also be included in the same lean colab notebook, the ar
 %------------------------------------------------
 
 \section{Results and Analysis}
+In this section, the results are presented and an analysis of the results is carried out. Since not all results can be presented here, only selected analyses are presented as examples. All other analysis data can be viewed in the associated Github reposistory~\cite{ourGithubRepo}.
 
 \subsection{Training and Test performance}
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item Welche Ergebnisse erzielt das Training?
-	\item Welches Ergebnis erzielt der Test?
-\end{enumerate}
+\autoref{fig:trainTestComparisonAppl2orange} shows a graph including the averaged training and test losses of the two discriminator and two generator types. In general the discriminator losses are about 30 to 40\% smaller than the generator losses. Both types show a decreasing trend of the losses, whereby this is more evident for the generator losses than for the discriminator losses. This may also be due to the fact that the discriminator losses start out significantly smaller. Furthermore, it can be seen that the test losses for both discriminators fluctuate significantly more than the training losses, whereas this is exactly the opposite for the generators. At the end of the 2700 training steps (3 epochs), the generators training losses and the discriminator B test loss have a decreasing trend, while all the others have a slightly increasing trend. However, since the trend is downward over the entire 3 epochs, these slightly increasing trends will probably only lead to local maxima in further training.
+
+\begin{figure}[htb] 
+	\centering 
+	\includegraphics[width=\linewidth]{trainTestComparisonAppl2orange}
+	\caption{History of discriminators and generator losses for test and training data over the training epochs of the dataset \textit{apple2orange}.}
+	\label{fig:trainTestComparisonAppl2orange}
+\end{figure}
+
+Overall, however, it can be said that training and test losses run in tandem with each other and show a tendency to improve the network architecture with the implementation of the training.
+
+For dataset \textit{monet2photo}, the overall discriminator losses are also lower than those of the generators. Furthermore, falling trends can be seen here as well. In contrast to dataset \textit{apple2orange}, the discriminator test and training losses diverge more. Overall, the generator losses are also about 10\% smaller than those of dataset \textit{apple2orange}.
 
 \subsection{Components of the Generator loss}
+
 
 
 \subsection{Comparison of the Cycle\ac{GAN} variations}
@@ -432,7 +442,7 @@ with the Selfie2Anime dataset - Farben gut und schnell wandelbar, Konturen nicht
 %------------------------------------------------
 
 \section{Conclusion and Future work}
-
+Du kannst am Ende der Analyse ja auch noch schreiben, dass man noch viel mehr interessante Dinge untersuchen könnte, das aber außerhalb des Scopes von diesem Paper ist
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
 	\item Datensatz/Bildgröße
 	\item Dauer des Trainings und beanspruchung der rechenzeit
