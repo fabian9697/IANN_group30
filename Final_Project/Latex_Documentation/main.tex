@@ -137,11 +137,11 @@ As a second building block, the simple \ac{GAN} as presented in \ac{IANNWTF} is 
 
 %------------------------------------------------
 
-\section{Methods}
+\section{Methodology}
 
 As a transfer performance, our goal is not to teach our network the same translation as described in the paper.  Therefore, we decided to optimize our network to perform a translation from apple images to orange images and vice versa. For this, we had to select a suitable dataset, as well as to work out the methodological basics of the network architecture from the paper. In the following, these basics will be explained.
 
-\subsection{Architectures}
+\subsection{Related approaches}
 As the basis of the network architecture, the \ac{GAN} already known through the \ac{IANNWTF} module is extended to the Cycle-\ac{GAN} known through the paper \cite{image-to-image-ccan}.
 
 \paragraph{\acl{GAN}s} basically exist out of two neural networks, which more or less battle against each other, the \textit{Generator} and \textit{Discriminator}. The Generator takes the input and generates a fake image out of it, while the Discriminator tries to discriminate between generated and true images. Both parts of the network are trained individually from each other. The loss used in training is the adversarial loss.~\cite{Introduction-to-Cycle-GANs, GAN-Courseware}
@@ -389,10 +389,10 @@ For the representation and storage of the results further functions were program
 \end{figure}
 
 %------------------------------------------------
-\section{Evaluation}
+\section{Variations of the Cycle\ac{GAN}}
 After the pure reimplementation of the Cycle-\ac{GAN}, two further improvements are implemented. All three variants are then compared with each other. The implementation of the two improved variants is explained in more detail in the following two subsections.
 
-\subsection{Regularized \ac{ResNet} Blocks}
+\subsection{Regularized Cycle GAN}
 The first idea is taken from the original paper, see \cite{image-to-image-ccan}, and continued. Here also the Cycle-\ac{GAN} was already tested with options for the regularization. In this variant a further class for the \ac{ResNet} block, the \texttt{Regularized\_ResNet\_Block}, was programmed. This contains additionally a dropout layer, after the first convolutional layer. The dropout rate is assumed to be $0.5$.
 
 Since the code should be written lean and collected in one colab notebook, the generator class is passed another argument at initialization, the \texttt{Regularized\_Cycle\_GAN}. If this argument is set to \textit{false}, then the default \ac{ResNet} is used during initialization. Is this argument set to \textit{true} during initialization, the Cycle-\ac{GAN} is built with regularized \ac{ResNet} blocks.
@@ -407,33 +407,31 @@ So that the network can also be included in the same lean colab notebook, the ar
 
 %------------------------------------------------
 
-\section{Results}
+\section{Results and Analysis}
 
-\subsection{Training vs. Test}
+\subsection{Training and Test performance}
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
 	\item Welche Ergebnisse erzielt das Training?
 	\item Welches Ergebnis erzielt der Test?
 \end{enumerate}
 
-\subsection{Comparison of datasets}
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item Welche Ergebnisse erzielt apple2orange?
-	\item Welche Ergebnisse erzielt monet2photo?
-	\item Welche Ergebnisse erzielt selfie2anime?
-	\item Welche Ergebnisse zielen sie im vergleich zu einander?
-\end{enumerate}
+\subsection{Components of the Generator loss}
 
-\subsection{Comparison of network variations}
+
+\subsection{Comparison of the Cycle\ac{GAN} variations}
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
 	\item Welche Ergebnisse erzielt standard cycleGAN?
 	\item Welche Ergebnisse erzielt regularized cycle GAN?
 	\item Welche Ergebnisse erzielt wasserstein cycle gan?
-	\item Welche Ergebnisse zielen sie im vergleich zu einander?
+	\item Welche Ergebnisse zielen sie im vergleich zu einander
+	\item Qualitativer Bildvergleich an Apple2Orange
 \end{enumerate}
 
+\subsection{Limitations of the Cycle\ac{GAN} architecture}
+with the Selfie2Anime dataset - Farben gut und schnell wandelbar, Konturen nicht -> Beispiel Augen Selfie2Anime - Irgendeines der Paper hier citen, das stand da auch drin!
 %------------------------------------------------
 
-\section{Limitations and Discussion}
+\section{Conclusion and Future work}
 
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
 	\item Datensatz/Bildgröße
