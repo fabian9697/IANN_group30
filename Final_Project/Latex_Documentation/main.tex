@@ -437,6 +437,24 @@ Another interesting point of analysis is the examination of the various losses o
 The adversarial loss in \autoref{fig:componentsGeneratorLossMonet2Photo}, however, never exceeds the value of the weighted overall loss, as is the case with dataset \textit{apple2orange}. But here too, despite all this, the other losses show a clear downward trend. Accordingly, it can be said that here too it is clear that the network improves over the course of the training.
 
 \subsection{Comparison of the Cycle\ac{GAN} variations}
+\autoref{fig:generatorCycleGANTypes}
+\autoref{fig:discriminatorCycleGANTypes}
+
+
+\begin{figure}[htb] 
+	\centering 
+	\includegraphics[width=\linewidth]{generatorCycleGANTypes}
+	\caption{History of the overall loss of different Cycle\ac{GAN} variations of (\texttt{generator\_A\_to\_B}) of the training data over all trainings epochs of the dataset \textit{monet2photo}.}
+	\label{fig:generatorCycleGANTypes}
+\end{figure}
+
+\begin{figure}[htb] 
+	\centering 
+	\includegraphics[width=\linewidth]{discriminatorCycleGANTypes}
+	\caption{History of the overall loss of different Cycle\ac{GAN} variations of (\texttt{discriminator\_A}) of the training data over all trainings epochs of the dataset \textit{monet2photo}.}
+	\label{fig:discriminatorCycleGANTypes}
+\end{figure}
+
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
 	\item Welche Ergebnisse erzielt standard cycleGAN?
 	\item Welche Ergebnisse erzielt regularized cycle GAN?
@@ -449,8 +467,11 @@ The adversarial loss in \autoref{fig:componentsGeneratorLossMonet2Photo}, howeve
 with the Selfie2Anime dataset - Farben gut und schnell wandelbar, Konturen nicht -> Beispiel Augen Selfie2Anime - Irgendeines der Paper hier citen, das stand da auch drin!
 %------------------------------------------------
 
+
 \section{Conclusion and Future work}
-Du kannst am Ende der Analyse ja auch noch schreiben, dass man noch viel mehr interessante Dinge untersuchen könnte, das aber außerhalb des Scopes von diesem Paper ist
+The analysis between different datasets, as well as a more detailed look at the losses between each other, and much more could be explored in more detail. However, this is outside the time frame of the project. Further limits and extension ideas are touched on below.
+
+
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
 	\item Datensatz/Bildgröße
 	\item Dauer des Trainings und beanspruchung der rechenzeit
