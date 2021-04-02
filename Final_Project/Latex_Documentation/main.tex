@@ -34,6 +34,9 @@
 
 \usepackage{makecell}	% For manual line breaks in tables
 
+\usepackage{caption}
+\usepackage{subcaption}	% Needed for subfigures
+
 %----------------------------------------------------------------------------------------
 %	COLUMNS
 %----------------------------------------------------------------------------------------
@@ -462,6 +465,51 @@ The adversarial loss in \autoref{fig:componentsGeneratorLossMonet2Photo}, howeve
 	\item Welche Ergebnisse zielen sie im vergleich zu einander
 	\item Qualitativer Bildvergleich an Apple2Orange
 \end{enumerate}
+
+\begin{figure}[htb] 
+	\centering 
+\begin{subfigure}[b]{0.45\linewidth}
+	\includegraphics[width=\linewidth]{ClassicalCycleGANOriginalDomainA}
+	\caption{Original example image of domain A}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.45\linewidth}
+	\includegraphics[width=\linewidth]{ClassicalCycleGANGenDomainBAfter8}
+	\caption{Generic image after 2700 training steps}
+	\end{subfigure}
+\caption{Example of an image processed by the Classical Cycle\ac{GAN} from domain A to B of dataset \textit{apple2orange}}
+\label{fig:ClassicalCycleGANExample}
+\end{figure}
+
+\begin{figure}[htb] 
+	\centering 
+\begin{subfigure}[b]{0.45\linewidth}
+	\includegraphics[width=\linewidth]{CycleWGANOriginalDomainA}
+	\caption{Original example image of domain A}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.45\linewidth}
+	\includegraphics[width=\linewidth]{CycleWGANGenDomainBAfter5}
+	\caption{Generic image after 1500 training steps}
+	\end{subfigure}
+\caption{Example of an image processed by the Cycle\ac{WGAN} from domain A to B of dataset \textit{apple2orange}}
+\label{fig:CycleWGANExample}
+\end{figure}
+
+\begin{figure}[htb] 
+	\centering 
+\begin{subfigure}[b]{0.45\linewidth}
+	\includegraphics[width=\linewidth]{RegularizedCycleGANOriginalDomainA}
+	\caption{Original example image of domain A}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.45\linewidth}
+	\includegraphics[width=\linewidth]{RegularizedCycleGANGenDomainBAfter8}
+	\caption{Generic image after 2700 training steps}
+	\end{subfigure}
+\caption{Example of an image processed by the Regularized Cycle\ac{GAN} from domain A to B of dataset \textit{apple2orange}}
+\label{fig:RegularizedCycleGANExample}
+\end{figure}
 
 \subsection{Limitations of the Cycle\ac{GAN} architecture}
 with the Selfie2Anime dataset - Farben gut und schnell wandelbar, Konturen nicht -> Beispiel Augen Selfie2Anime - Irgendeines der Paper hier citen, das stand da auch drin!
