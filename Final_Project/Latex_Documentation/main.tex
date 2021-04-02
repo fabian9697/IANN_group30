@@ -519,13 +519,16 @@ with the Selfie2Anime dataset - Farben gut und schnell wandelbar, Konturen nicht
 \section{Conclusion and Future work}
 The analysis between different datasets, as well as a more detailed look at the losses between each other, and much more could be explored in more detail. However, this is outside the time frame of the project. Further limits and extension ideas are touched on below.
 
+Unlike previously planned, the analysis could only be carried out more detailed using the Tensorflow datasets, as the duration of the training process for the Kaggle dataset \textit{selfie2anime} was too long. Despite a subsequent reduction of the epochs to one, the network needed more than half a day. In addition, with Goolge Colab's limitation of GPU time, it was hardly possible to train over such a long period. Nevertheless, few results of the first training steps were stored in the repository. However, since this is difficult to compare with the other datasets due to the few trainings steps in comparison, a more detailed analysis was not performed here. However, since a few interesting features already developed within the first training steps, this analysis should be expanded in further projects.
 
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item Datensatz/Bildgröße
-	\item Dauer des Trainings und beanspruchung der rechenzeit
-	\item noch besser wäre es wenn die 5 bilder noch zwischen den Unterschiedlichen GAN varianten gleich wäre, aber auf grund von shuffel ist das nicht so einfach und da das notepad immer neu gestartet wird
-	\item besser test und training gleichviele abspeichern oder noch öfter, aber das wäre zu zeit intensiv
-\end{enumerate}
+The images of the datasets also had to be greatly reduced in size in order to be able to train approximately within the framework of the project. The behaviour of the network at a higher resolution of the images is another interesting detail to investigate.
+
+Furthermore, it would be possible to expand the training and tests. In order to have an even better comparability between the Cycle\ac{GAN} variations, the same 5 test images could always be used for all variations. This was only noticed during the analysis and was no longer implemented due to time constraints, among other things. Another difficulty for the implementation is also the design of the notebook, as this is always executed anew. The five test images would therefore have to be administered externally beforehand in order to be able to guarantee access to the always same images.
+
+Another improvement can be found in the saving of data. Here, an even more detailed evaluation could take place if data were saved after each training step. However, due to the huge flood of data and the increased computing time, this was not done.
+
+In summary, the results of the project are more meaningful than previously expected. Nevertheless, there is much more potential of the Cycle\ac{GAN}s that could not be realised in this project due to time constraints.
+
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
