@@ -425,8 +425,16 @@ Overall, however, it can be said that training and test losses run in tandem wit
 For dataset \textit{monet2photo}, the overall discriminator losses are also lower than those of the generators. Furthermore, falling trends can be seen here as well. In contrast to dataset \textit{apple2orange}, the discriminator test and training losses diverge more. Overall, the generator losses are also about 10\% smaller than those of dataset \textit{apple2orange}.
 
 \subsection{Components of the Generator loss}
+Another interesting point of analysis is the examination of the various losses of the generator presented earlier. For dataset \textit{monet2photo}, these are seen from \texttt{generator\_A\_to\_B} in \autoref{fig:componentsGeneratorLossMonet2Photo}. As can be seen, the losses are almost all on a downward trend. The adversarial loss is very striking. This has a very strong upward tendency after about 1200 training steps. Despite all this, the combined loss of the generator (weighted overall loss) maintains the downward trend. Towards the end, the adversarial loss begins to indicate a downward trend again. Nevertheless, there is currently a global maximum at training step 2550.
 
+\begin{figure}[htb] 
+	\centering 
+	\includegraphics[width=\linewidth]{componentsGeneratorLossMonet2Photo}
+	\caption{History of the different generator losses (\texttt{generator\_A\_to\_B}) of the training data over all trainings epochs of the dataset \textit{monet2photo}.}
+	\label{fig:componentsGeneratorLossMonet2Photo}
+\end{figure}
 
+The adversarial loss in \autoref{fig:componentsGeneratorLossMonet2Photo}, however, never exceeds the value of the weighted overall loss, as is the case with dataset \textit{apple2orange}. But here too, despite all this, the other losses show a clear downward trend. Accordingly, it can be said that here too it is clear that the network improves over the course of the training.
 
 \subsection{Comparison of the Cycle\ac{GAN} variations}
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
