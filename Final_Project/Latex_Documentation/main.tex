@@ -110,14 +110,14 @@
 
 \Authors{Fabian Imkenberg, Jacqueline Naether}
 
-\Keywords{CycleGAN --- Unpaired Image-to-Image Translation --- Keyword3} 
+\Keywords{CycleGAN --- Unpaired Image-to-Image Translation --- CycleWGAN -- Regularized CycleGAN} 
 \newcommand{\keywordname}{Keywords} % Defines the keywords heading name
 
 %----------------------------------------------------------------------------------------
 %	ABSTRACT
 %----------------------------------------------------------------------------------------
 
-\Abstract{Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna. Donec vehicula augue eu neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ut leo. Cras viverra metus rhoncus sem. Nulla et lectus vestibulum urna fringilla ultrices. Phasellus eu tellus sit amet tortor gravida placerat. Integer sapien est, iaculis in, pretium quis, viverra ac, nunc. Praesent eget sem vel leo ultrices bibendum. Aenean faucibus. Morbi dolor nulla, malesuada eu, pulvinar at, mollis ac, nulla. Curabitur auctor semper nulla. Donec varius orci eget risus. Duis nibh mi, congue eu, accumsan eleifend, sagittis quis, diam. Duis eget orci sit amet orci dignissim rutrum.}
+\Abstract{In this project, we reimplement the paper "Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks" and test its performance with three different datasets, from which two were given by the paper and another new one. After reimplementation of the Cycle \ac{GAN} with minor justified changes, two modifications are applied. This results in the three different variations of Cycle\ac{GAN}s, Classical Cycle\ac{GAN}, Regularized Cycle\ac{GAN}, Cycle \ac{WGAN}. After the implementation follows the analysis of the performance of the different \ac{GAN} variations and the different datasets. Here it becomes clear that the Cycle\ac{GAN} already shows progress after a few training steps, whereas changing colours through the Cycle\ac{GAN} is learned much faster and easier than learning more complicated features such as eyes.}
 
 %----------------------------------------------------------------------------------------
 
@@ -442,9 +442,7 @@ Another interesting point of analysis is the examination of the various losses o
 The adversarial loss in \autoref{fig:componentsGeneratorLossMonet2Photo}, however, never exceeds the value of the weighted overall loss, as is the case with dataset \textit{apple2orange}. But here too, despite all this, the other losses show a clear downward trend. Accordingly, it can be said that here too it is clear that the network improves over the course of the training.
 
 \subsection{Comparison of the Cycle\ac{GAN} variations}
-\autoref{fig:generatorCycleGANTypes}
-\autoref{fig:discriminatorCycleGANTypes}
-
+The different Cycle\ac{GAN} variations show different progressions in the losses, see \autoref{fig:generatorCycleGANTypes} and \autoref{fig:discriminatorCycleGANTypes}. While the discriminator losses show only a very slight downward trend within the three epochs, this trend can be seen more clearly in the generator losses. While the curve for the Cycle\ac{WGAN} generator loss is much smoother, it is much more erratic for the discriminator than for the other variations. The lowest generator loss is achieved by the classic Cycle\ac{GAN}, whereas this is not the case with the discriminator. This may also be related to the fact that better generated images are also more difficult to detect by a discriminator and vice versa. On the basis of these results, it is not possible to say whether one of the networks works better or worse than another. For this, an even longer training period would provide more information. 
 
 \begin{figure}[htb] 
 	\centering 
@@ -460,13 +458,8 @@ The adversarial loss in \autoref{fig:componentsGeneratorLossMonet2Photo}, howeve
 	\label{fig:discriminatorCycleGANTypes}
 \end{figure}
 
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-	\item Welche Ergebnisse erzielt standard cycleGAN?
-	\item Welche Ergebnisse erzielt regularized cycle GAN?
-	\item Welche Ergebnisse erzielt wasserstein cycle gan?
-	\item Welche Ergebnisse zielen sie im vergleich zu einander
-	\item Qualitativer Bildvergleich an Apple2Orange
-\end{enumerate}
+Another possibility is to compare the quality of the sample images. \autoref{fig:ClassicalCycleGANExample} shows an already great success after three epochs in the translation of an apple image into an orange image. In comparison, the generated images of the other variations, see \autoref{fig:CycleWGANExample} and \autoref{fig:RegularizedCycleGANExample}, look much less like oranges. However, no qualitative statement can be made about whether the generated image of the Regularised Cycle\ac{GAN} or Cylce{WGAN} looks more realistic than the other. Both images are very similar although the losses differ in numbers.
+You can see the transitions between the individual fruits quite well despite the generated images. The borders were not changed much by any of the Cycle\ac{GAN} variants. This shows that all Cycle\ac{GAN} variations have basically recognised the fruit feature as such.
 
 \begin{figure}[htb] 
 	\centering 
@@ -514,8 +507,24 @@ The adversarial loss in \autoref{fig:componentsGeneratorLossMonet2Photo}, howeve
 \end{figure}
 
 \subsection{Limitations of the Cycle\ac{GAN} architecture}
-with the Selfie2Anime dataset - Farben gut und schnell wandelbar, Konturen nicht -> Beispiel Augen Selfie2Anime - Irgendeines der Paper hier citen, das stand da auch drin!
-%------------------------------------------------
+As the training of the \textit{selfie2anime} dataset takes too long for this project framework, only very few training steps (300) could be carried out and only one test could be conducted after them. The result is shown in \autoref{fig:CycleWGANSelfieExample}. You can see that the colours are transformed well and quickly, whereas the contours are not. This can be seen very clearly in the area of the eyes, for example.
+
+This result is also reflected in the comparison with the \textit{apple2orange} example, where the colour of the apples changes quite quickly to orange, but the contours remain almost untouched.
+
+\begin{figure}[htb] 
+	\centering 
+\begin{subfigure}[b]{0.45\linewidth}
+	\includegraphics[width=\linewidth]{RegularizedCycleGANOriginalSelfieDomainA}
+	\caption{Original example image of domain A}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.45\linewidth}
+	\includegraphics[width=\linewidth]{RegularizedCycleGANGenAnimeDomainB}
+	\caption{Generic image after 300 training steps}
+	\end{subfigure}
+\caption{Example of an image processed by the Regularized Cycle\ac{GAN} from domain A to B of dataset \textit{selfie2anime}}
+\label{fig:CycleWGANSelfieExample}
+\end{figure}
 
 
 \section{Conclusion and Future work}
