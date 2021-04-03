@@ -117,7 +117,7 @@
 %	ABSTRACT
 %----------------------------------------------------------------------------------------
 
-\Abstract{In this project, we reimplement the paper "Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks" and test its performance with three different datasets, from which two were given by the paper and another new one. After reimplementation of the Cycle \ac{GAN} with minor justified changes, two modifications are applied. This results in the three different variations of Cycle\ac{GAN}s, Classical Cycle\ac{GAN}, Regularized Cycle\ac{GAN}, Cycle \ac{WGAN}. After the implementation follows the analysis of the performance of the different \ac{GAN} variations and the different datasets. Here it becomes clear that the Cycle\ac{GAN} already shows progress after a few training steps, whereas changing colours through the Cycle\ac{GAN} is learned much faster and easier than learning more complicated features such as eyes.}
+\Abstract{In this project, we reimplement the paper "Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks" and test its performance with three different datasets, two given by the paper and the third one downloaded from Kaggle. After the reimplementation of the Cycle \ac{GAN} including minor justified changes, two modifications are applied. This results in three variations of Cycle\ac{GAN}s: Classical Cycle\ac{GAN}, Regularized Cycle\ac{GAN} and Cycle \ac{WGAN}. After the implementation, the performance of the Cycle\ac{GAN} variations on the different datasets is analyzed. Here it becomes clear that the Cycle\ac{GAN} already shows a good progress after just a few training steps, where changing colors is learned much faster and easier than more advanced concepts like adapting the contour of eyes.}
 
 %----------------------------------------------------------------------------------------
 
@@ -169,12 +169,12 @@ From this, it can be inferred that a simple for- and backward translation may re
 	\label{fig:cycleConsistencyLoss}
 \end{figure*}
 
-\paragraph{Cycle Wasserstein \ac{GAN}s} are an improvement of the classical Cycle\ac{GAN}. This type was introduced due to the frequent training instabilites of Cycle\ac{GAN}s. CycleW\ac{GAN}s aim to overcome this issue by introducing the Wasserstein distance which has better continuity and differentiability properties in contrast to local saturated loss functions. Thus, the approach is intended to reduce the problem of vanishing gradients.~\cite{wgan-improvement}.
+\paragraph{Cycle Wasserstein \ac{GAN}s} are an improvement of the classical Cycle\ac{GAN}. This type is introduced due to the frequent training instabilites of Cycle\ac{GAN}s. CycleW\ac{GAN}s aim to overcome this issue by introducing the Wasserstein distance which has better continuity and differentiability properties in contrast to local saturated loss functions. Thus, the approach is intended to reduce the problem of vanishing gradients.~\cite{wgan-improvement}.
 
 \subsection{Formulation}
 For a better understanding of the function and the subsequent implementation of the losses, the mathematical background is explained in more detail.
 
-\paragraph{Adversarial Loss} is already used in the training of  \ac{GAN}s. It arises from the fact that the generator \textit{G} and discriminator \textit{D} compete with each other. If the generator generates particularly good fake images which the discriminator can no longer identify as such, the discriminator's loss automatically increases. On the other hand, the loss of the generator decreases. This behaviour is the same the other way round. It is mathematically described in \cite{Source-GAN} as follows:
+\paragraph{Adversarial Loss} is already used in the training of  \ac{GAN}s. It arises from the fact that the generator \textit{G} and discriminator \textit{D} compete with each other. If the generator creates particularly good fake images which the discriminator can no longer identify as such, the discriminator's loss automatically increases. On the other hand, the loss of the generator decreases. This behaviour is the same the other way round. It is mathematically described in \cite{Source-GAN} as follows:
 \begin{equation*}
 \begin{split}
 \min_{G} \max_{D} V(D,G) =&~\mathbb E_{x \sim p_{data}(x)} [\log D(x)] \\\
@@ -222,7 +222,7 @@ In addition to the architecture, suitable datasets must be selected. These shoul
 \end{tabular}
 \end{table}
 
-\paragraph{Kaggle} provides another dataset called \textit{arnaud58/selfie\-2\-ani\-me}. This one is selected to analyze the performance of the Cycle\ac{GAN} on a dataset which was not part of the classical Cycle\ac{GAN} paper~\cite{image-to-image-ccan}. It contains images of animes and women selfies. The number of examples included in this dataset are shown in \autoref{tab:datasetKaggle}. \cite{kaggle-dataset}
+\paragraph{Kaggle} provides another dataset called \textit{arnaud58/selfie\-2\-ani\-me}. This one is selected to analyze the performance of the Cycle\ac{GAN} on a dataset which is not part of the classical Cycle\ac{GAN} paper~\cite{image-to-image-ccan}. It contains images of animes and women selfies. The number of examples included in this dataset are shown in \autoref{tab:datasetKaggle}. \cite{kaggle-dataset}
 
 \begin{table}[htb]
 \centering
@@ -238,7 +238,7 @@ In addition to the architecture, suitable datasets must be selected. These shoul
 \end{table}
 %------------------------------------------------
 \section{Implementation}
-The implementation is performed using the taught three steps from the module \ac{IANNWTF}: pre-processing, training and test~\cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle\ac{GAN} architecture. Furthermore, functions of the Tensorflow and Keras libraries are utilized in nearly every part of the implementation. The realization of the implementation and usage of the different libraries is now explained in more detail.
+The implementation is done with the learned three steps from the module \ac{IANNWTF}: pre-processing, training and test~\cite{implementingANsCourseware02, implementingANsCourseware03}. In addition, the methods mentioned in the section before are used to develop the Cycle\ac{GAN} architecture. Furthermore, functions of the Tensorflow and Keras libraries are utilized in nearly every part of the implementation. The realization of the implementation and use of the various libraries will now be explained in more detail.
 
 \subsection{Network Architecture}
 The architecture is built up as explained in the section before, with implementing two classes \texttt{Cycle\_GAN\_Generator} and  \texttt{Cycle\_GAN\_Discriminator}. In the following, two instances of each class are created, \texttt{generator\_A\_to\_B} and \texttt{generator\_B\_to\_A} as well as \texttt{discriminator\_A} and \texttt{discriminator\_B}.
@@ -252,7 +252,7 @@ The architecture is built up as explained in the section before, with implementi
 	\label{fig:generator}
 \end{figure*}
 
-The \textbf{Encoding} extracts the features of the original input image. In \texttt{Cycle\_GAN\_Generator}, the encoding consists of exactly three convolutional layers, as depicted in \autoref{fig:generator}. The Keras class \texttt{Conv2D} is used for this. As activation function \ac{ReLu} is selected, using the Keras class \texttt{ReLu}. Furthermore, the Keras class \texttt{InstanceNormalization} is utilized to enable this special form of group normalization, see \cite{google-tf-InstanceNormalization} for more details. Instance Normalization is well-suited for the datasets with batch size 1 as recommended by the paper. The filter sizes of each \texttt{Conv2D} layer are quartered to reduce the complexity and enable a faster training of the Cycle\ac{GAN}. All other relevant parameters like \texttt{kernel\_size}, \texttt{strides}, \texttt{activation}, \texttt{padding} and the \texttt{kernel\-\_initializer} are taken from the paper which ones values for the three \texttt{Conv2D} layers are shown in \autoref{tab:encoderValues}.~\cite{image-to-image-ccan}
+The \textbf{Encoding} extracts the features of the original input image. In \texttt{Cycle\_GAN\_Generator}, the encoding consists of exactly three convolutional layers, as depicted in \autoref{fig:generator}. The Keras class \texttt{Conv2D} is used for this. As activation function \ac{ReLu} is selected, using the Keras class \texttt{ReLu}. Furthermore, the Keras class \texttt{InstanceNormalization} is utilized to enable this special form of group normalization, see \cite{google-tf-InstanceNormalization} for more details. Instance Normalization is well suited for datasets with batch size 1, such as recommended in the paper. The filter sizes of each \texttt{Conv2D} layer are quartered to reduce the complexity and enable a faster training of the Cycle\ac{GAN}. All other relevant arguments like \texttt{kernel\_size}, \texttt{strides}, \texttt{activation}, \texttt{padding} and the \texttt{kernel\-\_initializer} are given by the paper. The specifications and arguments for the three \texttt{Conv2D} layers are shown in \autoref{tab:encoderValues}.~\cite{image-to-image-ccan}
 
 \begin{table}[htb]
 \centering
@@ -269,7 +269,7 @@ The \textbf{Encoding} extracts the features of the original input image. In \tex
 \end{tabular}
 \end{table}
 
-The \textbf{Transformation} is needed to relate closely spaced features extracted from the input image by the previous encoding \cite{Introduction-to-Cycle-GANs}. And this is exactly what the blocks of \acp{ResNet}, like shown in \autoref{fig:generator}, are needed for. Every \ac{ResNet} is build up by two \texttt{Conv2D} layers, two layers of \texttt{Instance\-Normalization}, a \ac{ReLu} activation layer and a layer \texttt{Concatenate}, which is also a Keras class. A new class \texttt{ResNet\-\_Block}, which also inherits from the Keras class \texttt{Layer}, is implemented. All values for the layers are taken from the paper. The convolutional layer arguments are shown in \autoref{tab:transformerValues}.
+The \textbf{Transformation} is needed to relate closely spaced features extracted from the input image by the previous encoding \cite{Introduction-to-Cycle-GANs}. This is exactly what the blocks of \acp{ResNet}, like shown in \autoref{fig:generator}, are needed for. Every \ac{ResNet} is build up by two \texttt{Conv2D} layers, two layers of \texttt{Instance\-Normalization}, a \ac{ReLu} activation layer and a layer \texttt{Concatenate} which is also a Keras class. A new class \texttt{ResNet\-\_Block}, which also inherits from the Keras class \texttt{Layer}, is implemented. All arguments for the layers are given by the paper. The convolutional layer arguments are shown in \autoref{tab:transformerValues}.
 
 \begin{table}[htb]
 \centering
@@ -288,7 +288,7 @@ The \textbf{Transformation} is needed to relate closely spaced features extracte
 
 Instances of this class are created as a layer in the class \texttt{Cycle\_GAN\-\_Generator}. The number of instances depends on the instance variable \texttt{n\_resnet}, which is set to six by default. Six \ac{ResNet} blocks are used if the image size is \textit{128~x~128}, nine blocks are use for an image size of \textit{256~x~256} or higher~\cite{image-to-image-ccan}.
 
-The \textbf{Decoding} now leads back to an output image. For this, the low-level features are worked out with the help of the transpose convolution, see \cite{Introduction-to-Cycle-GANs}. To achieve this, the Keras class \texttt{Conv2DTranspose} is used in this part. Finally, as shown in \autoref{fig:generator}, another \texttt{Conv2D} is used, in conjunction with an activation function of the Keras class \texttt{tanh}. The values of the transposed convolution layer arguments is found in \autoref{tab:decoderValues1}, for the convolutional layer arguments in \autoref{tab:decoderValues2}.
+The \textbf{Decoding} now leads back to an output image. Therefore, the low-level features are worked out with the help of the transpose convolution, see \cite{Introduction-to-Cycle-GANs}. To achieve this, the Keras class \texttt{Conv2DTranspose} is used in this part. Finally, as shown in \autoref{fig:generator}, another \texttt{Conv2D} is used, in conjunction with an activation function of the Keras class \texttt{tanh}. The values of the transposed convolution layer arguments can be found in \autoref{tab:decoderValues1} and of the convolutional layer arguments in \autoref{tab:decoderValues2}.
 
 \begin{table}[htb]
 \centering
@@ -307,7 +307,7 @@ The \textbf{Decoding} now leads back to an output image. For this, the low-level
 
 \begin{table}[htb]
 \centering
-\caption{Values of the convolutional layer argument in the decoding part of the class \texttt{Cycle\_GAN\-\_Gene\-rator}~\cite{image-to-image-ccan}.}
+\caption{Values of the convolutional layer arguments in the decoding part of the class \texttt{Cycle\_GAN\-\_Gene\-rator}~\cite{image-to-image-ccan}.}
 \label{tab:decoderValues2}
 \begin{tabular}{c c}
 \textbf{variable} & \makecell[cc]{\textbf{\texttt{Conv2D}} \\ \textbf{\texttt{Layer 4}}} \\ \hline
@@ -320,7 +320,7 @@ The \textbf{Decoding} now leads back to an output image. For this, the low-level
 \end{tabular}
 \end{table}
 
-\paragraph{Discriminator Class} also inherits from the Keras class \texttt{La- yer}. In this reimplementation the class is a modified discriminator class, a so called \textit{Patch\ac{GAN}}. This one is made up to not only output a single value, but a one-channel feature map of predictions. In this case the output refers to a \textit{70~x~70} receptive field of the original input. Since it has an image as input and a decision vector as output, \texttt{Conv2D} layers are associated with \texttt{InstanceNormalization} and the activation function \texttt{LeakyReLu}. The values for the layers and there arguments are taken from the paper and are shown in \autoref{tab:discriminatorValues}. The original \texttt{filters} size here again is divided by four in the reimplementation to reduce training time. After first convolutional layer they didn't deliberately used \texttt{InstanceNormalization}. Last layer is a convolution to produce an output of 1-dimension. The structure of the discriminator is also shown in \autoref{fig:discriminator}. \cite{Introduction-to-Cycle-GANs}
+\paragraph{Discriminator Class} also inherits from the Keras class \texttt{La- yer}. In this reimplementation, the class is a modified discriminator class, a so called \textit{Patch\ac{GAN}}. This one is made up to not only output a single value, but a one-channel feature map of predictions. In this case the output refers to a \textit{70~x~70} receptive field of the original input. Since it has an image as input and a decision vector as output, \texttt{Conv2D} layers are associated with \texttt{InstanceNormalization} and the activation function \texttt{LeakyReLu}. The arguments of the layers are given by the paper and shown in \autoref{tab:discriminatorValues}. The original \texttt{filters} size is here again divided by four to reduce the training time. After the first convolutional layer, they deliberately use no \texttt{InstanceNormalization}. The last layer is a convolution to produce an output of dimension 1. The structure of the discriminator is also shown in \autoref{fig:discriminator}. \cite{Introduction-to-Cycle-GANs}
 \begin{table}[htb]
 \centering
 \caption{Values of the convolutional layer arguments in the discriminator class \texttt{Cycle\_GAN\-\_Discriminator}\cite{image-to-image-ccan}.}
@@ -354,21 +354,20 @@ The \textbf{Decoding} now leads back to an output image. For this, the low-level
 \end{figure*}
 
 \subsection{Pre-Processing}
-In addition to creating the network architecture, the dataset must also be preprocessed. In order to implement easier switching between datasets and comparison versions, in addition to the reimplementation of the paper, different mechanisms were included. For switching between datasets, additional variables (\texttt{is\_selfie2anime\_dataset}, \texttt{is\_ap- ple2orange\_dataset}, \texttt{is\_monet2photo\_dataset}) were implemented to select the dataset to be pre-processed. At the beginning, these variables are used to select which dataset is to be loaded, by setting it \texttt{true}. Only one dataset can be loaded at a time. If several dataset arguments are set to true, the Kaggle dataset is preferred to the Tensorflow datasets due to the \texttt{if-elif-elif} query, and the \textit{apple2orange} dataset is preferred to the \textit{monet2photo} dataset.
+In addition to creating the network architecture, the dataset must also be pre-processed. In order to implement easier switching between datasets and comparison versions different mechanisms are included. For switching between datasets, additional variables (\texttt{is\_selfie2anime\_dataset}, \texttt{is\_ap- ple2orange\_dataset}, \texttt{is\_monet2photo\_dataset}) are implemented to select the dataset to be pre-processed. At the beginning, these variables are used to select which dataset is loaded, by setting it \texttt{true}. Only one dataset can be loaded each time.
 
-Additionally, the dataset size is set to 900 training samples and 100 test samples after pre-processing to have a comparable number of images, between the different datasets. 
+Additionally, the dataset size is set to 900 training samples and 100 test samples after pre-processing to have a comparable number of images for the various datasets. 
 
-Moreover, since two different sources for the three datasets are used, there are a few different steps for pre-processing between the Tensorflow and Kaggle datasets. 
+Moreover, since two different sources for the three datasets are used, there are a some different steps for pre-processing between the Tensorflow and Kaggle datasets. 
 
-\paragraph{Tensorflow datasets} can be loaded more easily with the \texttt{tfds.load} function from the tensorflow library. In general there is more or less no difference between pre-processing \textit{cylce\_gan/apple2orange} or \textit{cylce\_gan/monet2photo} images. When the dataset is loaded, it is also directly split into test and training data, as well as in two domains for each, and requested as a 2-tuple structure (input, label). To ensure that all images are in the same format and that the training time is not too high, the images are subsequently resized to \textit{128~x~128}. After normalization to a value between $-1$ and $1$ ($2 * (img / 255) - 1$) and reshaping the tensor to \textit{128~x~128~x~3}, the dataset is shuffled and prefetched with a \texttt{buffer\_size} of 128. Batching is omitted, or rather set to one, to facilitate the later definition of real samples in training. All functions used are offered by the Tensorflow library. The values for arguments of the different pre-processing steps are taken directly from the paper.~\cite{image-to-image-ccan}
+\paragraph{Tensorflow datasets} can be loaded more easily with the \texttt{tfds.load} function from the tensorflow library. In general there is more or less no difference between pre-processing \textit{cylce\_gan/apple2orange} or \textit{cylce\_gan/monet2photo} images. When the dataset is loaded, it is also split into test and training data, as well as into two domains for each, and requested as a 2-tuple structure (input, label). To ensure that all images are in the same format and that the training time is not too high, the images are subsequently resized to \textit{128~x~128}. After normalization to a value between $-1$ and $1$ ($2 * (img / 255) - 1$) and reshaping the tensor to \textit{128~x~128~x~3}, the dataset is shuffled and prefetched with a \texttt{buffer\_size} of 128. Batching is omitted, or rather set to one, to facilitate the later definition of real samples in training. All functions used are offered by the Tensorflow library. The values for the arguments of the different pre-processing steps are taken from the paper.~\cite{image-to-image-ccan}
 
-\paragraph{Kaggle datasets} need a few more pre-processing steps, than Tensorflow ones. The dataset \textit{arnaud58/selfie2anime} is downloaded with Keras function \texttt{image\_dataset\_from\-\_di\-rec\-tory} and directly batched to one. Because the dataset comes up as one big file, in which the dataset is separated in the different classes mentioned in \autoref{tab:datasetKaggle}, see \cite{kaggle-dataset}, it then needs to be split manually. This is done by using the functions \texttt{take} and \texttt{skip}. Thereupon, the same steps are carried out as for the Tensorflow datasets mentioned before.
-
+\paragraph{Kaggle datasets} need a few more pre-processing steps than Tensorflow ones. The dataset \textit{arnaud58/selfie2anime} is downloaded with Keras function \texttt{image\_dataset\_from\-\_di\-rec\-tory} and directly batched to one. Because the dataset comes up as one big file, in which the dataset is separated in the different classes mentioned in \autoref{tab:datasetKaggle}, see \cite{kaggle-dataset}, it then needs to be split manually. This is done by using the functions \texttt{take} and \texttt{skip}. Thereupon, the same steps are carried out as for the Tensorflow datasets mentioned before.
 
 \subsection{Training}
 Three training epochs are chosen with each epoch having 900 training steps. With these numbers, the training can still be done in a reasonable amount of time. To make the training clearer, various functions have been programmed for different steps in the execution of the program.
  
-In the first step the generators are trained. The training starts with taking an image-label pair from domain A and from domain B with the help of the function \texttt{generate\-\_real\-\_dataset}. These pairs are randomly taken from the domains again for each training step. Afterwards the training for the \texttt{generator\-\_A\-\_to\-\_B} takes place and then for the \texttt{generator\-\_B\-\_to\-\_A}. Here for, the function \texttt{generator\-\_train\-\_step} was programmed, in which the adversarial loss (\texttt{adv\-\_loss}), the identity loss (\texttt{id\-\_loss}), the cycle consistency loss for the forward (\texttt{for\_loss}) and backward cycle (\texttt{back\_loss}) and the entire training loss (\texttt{train\_loss}) is computed. The training loss is composed of all other losses as follows:
+In the first step the generators are trained. The training starts with taking an image-label pair from domain A and from domain B with the help of the function \texttt{generate\-\_real\-\_dataset}. These pairs are again randomly taken from the domains for each training step. Afterwards the training of the \texttt{generator\-\_A\-\_to\-\_B} and the \texttt{generator\-\_B\-\_to\-\_A} takes place. For this purpose, the function \texttt{generator\-\_train\-\_step} is programmed, in which the adversarial loss (\texttt{adv\-\_loss}), the identity loss (\texttt{id\-\_loss}), the cycle consistency loss for the forward (\texttt{for\_loss}) and backward cycle (\texttt{back\_loss}) and the entire training loss (\texttt{train\_loss}) is computed. The training loss is composed of all other losses as follows:
 \begin{equation*}
 \begin{split}
 train\_loss = &~(1 * adv\_loss) \\
@@ -376,15 +375,15 @@ train\_loss = &~(1 * adv\_loss) \\
 &+ (5 * id\_loss)
 \end{split}
 \end{equation*}
-In the papers implementation the identity loss is only used for the dataset \textit{cylce\_gan/monet2photo}. For better comparability between the different datasets, this was used to calculate the training loss in the reimplementation for all datasets. The training loss is then used in this function to update the generator parameters. To update the gradients of the generators, the loss function \textit{MeanAbsoluteError} is used. To update the generator parameters the optimizer \textit{Adam} is used.~\cite{image-to-image-ccan, google-Adam, google-GradientTape}
+In the papers implementation, the identity loss is only used for the dataset \textit{cylce\_gan/monet2photo}. For better comparability between the different datasets, it is used for all datasets in the reimplementation. The training loss is then utilized to update the generator parameters. For updating the gradients of the generators, the loss function \textit{MeanAbsoluteError} is used. For updating the generator parameters, the optimizer \textit{Adam} is used.~\cite{image-to-image-ccan, google-Adam, google-GradientTape}
 
-In the second step of each training step, the discriminators are trained. Since the discriminator is to identify the output image of the generator, the image from the selected image-label pair of domains A and B is fed to the respective generator before training and the result image is returned (function: \texttt{generate\-\_fake\-\_data\-set}). However, the discriminator is now not simply passed this training image. This image is now stored in a history buffer. The function \texttt{update\_image\-\_pool} stores the image in the buffer and returns it at the same time, if the pool is not yet filled with 50 images. As soon as the pool is filled with 50 images, a random image from the buffer is exchanged against the current training image when the function is called. The exchanged image is then given to the discriminator as input. So it can happen that the discriminator gets an image, where it is easier for the discriminator to distinguish a generated image from a real image, because the image was generated by a worse generator version. This prevents, after \cite{oscillation}, the oscillation of \ac{GAN}s. With the passed image a forward step is performed and the loss is calculated as \textit{MeanSquaredError}. The loss is divided by two when updating the gradients to reduce the learning rate of the discriminator. The parameter update is also performed with the Optimizer Adam.~\cite{image-to-image-ccan, google-Adam, google-GradientTape}
+In the second step of each training step, the discriminators are trained. Since the discriminator has to identify the output image of the generator, the image from the selected image-label pair of the domains A and B is fed to the respective generator before training and the result image is returned (function: \texttt{generate\-\_fake\-\_data\-set}). This image is now stored in a history buffer. The function \texttt{update\_image\-\_pool} stores the image in the buffer and returns it at the same time, if the pool is not filled with 50 images yet. As soon as the pool is filled with 50 images, a random image from the buffer is replaced by the current training image when the function is called. The replaced image is then given to the discriminator as input. It is possible that the discriminator gets an image, which makes it easier to distinguish a generated image from a real image, because the image is generated by a worse generator version. This prevents the oscillation of \ac{GAN}s~\cite{oscillation}. With the passed image a forward step is performed and the loss is calculated as \textit{MeanSquaredError}. The loss is divided by two when updating the gradients to reduce the learning rate of the discriminator. The parameter update is also performed with the Optimizer Adam.~\cite{image-to-image-ccan, google-Adam, google-GradientTape}
 
-To be able to document the training progress, the losses are averaged over the last 150 training steps and saved in a list. At the end of the program, these lists are saved in an Excel spreadsheet in Google Drive. The evaluation is then carried out with these values from these lists.
+To be able to document the training progress, the losses are averaged over the last 150 training steps and saved in a list. At the end of the program, these lists are saved in csv files in Google Drive. The evaluation is then carried out with the values from these lists.
 
 \subsection{Test}
-As in the training, this time image-label pairs are taken from the test datasets of domain A and domain B. The image-label pairs are then used to generate the test data. Subsequently, the \texttt{generator\-\_test\-\_step} and \texttt{dis\-crimi\-nator\-\_test\-\_step} functions calculate all the different losses, as in the training. However, this time parameters of the generators and discriminators are not updated. The losses are only returned for tracking.
-For the representation and storage of the results further functions were programmed in addition to the reimplementation. Like mentioned before, also the test losses are saved into Excel files in the Google Drive. After 300 training steps a test is conducted. Each test phase conducts 100 steps. The losses are averaged over these 100 test steps and saved. Moreover, the test and training losses are displayed in the notebook every 450 training steps, so two times per epoch. Additionally, five images are selected from the test dataset for the training at the beginning, which are fed to Cycle\ac{GAN} in each test, i.e. three times per epoch. The original images and the images generated from them are stored in a Google Drive folder structure. This ensures a better comparability between the different ones after different training periods. The folder structure is built up as shown in \autoref{fig:fileStructure}.
+Like during the training, image-label pairs are taken from the test datasets of domain A and domain B. The image-label pairs are then used to generate the test data. Subsequently, the \texttt{generator\-\_test\-\_step} and \texttt{dis\-crimi\-nator\-\_test\-\_step} functions calculate all the different losses like in the training. However, this time the parameters of the generators and discriminators are not updated. The losses are only returned for tracking.
+For the representation and storage of the results, further functions are programmed in addition to the reimplementation. Like mentioned before, the test losses are saved in csv files in Google Drive, too. After 300 training steps a test is conducted. Each test phase conducts 100 steps. The losses are averaged over these 100 test steps and saved. Moreover, the test and training losses are displayed in the notebook every 450 training steps, so two times per epoch. Additionally, five images are selected from the test dataset for the training at the beginning, which are fed to Cycle\ac{GAN} in each test, i.e., three times per epoch. The original images and the images generated from them are stored in a Google Drive folder structure. This ensures a better comparability between the different ones after different training periods. The folder structure is built up as shown in \autoref{fig:fileStructure}.
 
 \begin{figure}[htb] 
 	\centering 
@@ -395,84 +394,83 @@ For the representation and storage of the results further functions were program
 
 %------------------------------------------------
 \section{Variations of the Cycle\ac{GAN}}
-After the pure reimplementation of the Cycle\ac{GAN}, two further improvements are implemented. All three variants are then compared with each other. The implementation of the two improved variants is explained in more detail in the following two subsections.
+After the pure reimplementation of the Cycle\ac{GAN}, two further improvements are implemented. All three variations are then compared with each other. The implementation of the two improved versions is explained in more detail in the following two subsections.
 
 \subsection{Regularized CycleGAN}
-The first idea is taken from the original paper, see \cite{image-to-image-ccan}, and continued. Here, the Cycle\ac{GAN} was already tested with options for regularization. In this variant a further class for the \ac{ResNet} block, the \texttt{Regularized\_ResNet\_Block}, is programmed. This contains an additional dropout layer after the first convolutional layer. The dropout rate is assumed to be $0.5$.
+In this reimplementation, a further class for the \ac{ResNet} block, the \texttt{Regularized\_ResNet\_Block}, is programmed. This contains an additional dropout layer after the first convolutional layer. The dropout rate is assumed to be $0.5$.
 
-Since the code should be written lean and collected in one colab notebook, the generator class is passed another argument at initialization, the \texttt{Regularized\_Cycle\_GAN}. If this argument is set to \textit{false}, then the default \ac{ResNet} is used during initialization. Is this argument set to \textit{true} during initialization, the Cycle\ac{GAN} is built with regularized \ac{ResNet} blocks.
+Since the code should be written lean and collected in one colab notebook, the generator class is passed another argument at initialization, the \texttt{Regularized\_Cycle\_GAN}. If this argument is set to \textit{false}, the default \ac{ResNet} is used during initialization. If this argument is set to \textit{true}, the Cycle\ac{GAN} is built with regularized \ac{ResNet} blocks.
 
-Beside the adjustment of the \ac{ResNet} blocks in the generator, also the discriminator is adjusted. Already when initializing an instance of the discriminator class, the argument \texttt{kernel\_regularizer} with a L2 regularization loss is introduced to the convolutional layers. In the standard version of the Cycle\ac{GAN} this is also initialized, but not used. Therefore, the argument \texttt{Regularized\_Cycle\_GAN} is passed to the training step of the discriminator to control the computation of the loss dependent on it. If the argument is set to \textit{true}, the L2 loss for the discriminator is added and used for backpropagation.
-
+Beside the adjustment of the \ac{ResNet} blocks in the generator, also the discriminator is adjusted. Already when initializing an instance of the discriminator class, the argument \texttt{kernel\_regularizer} is introduced to the convolutional layers with a L2 regularization. In the classical version of the Cycle\ac{GAN} this is also initialized, but not used. Therefore, the argument \texttt{Regularized\_Cycle\_GAN} is passed to the training step of the discriminator to control the computation of the loss dependent on it. The L2 loss for the discriminator is only added and used for backpropagation if this argument is set to \textit{true}.
 
 \subsection{Cycle Wasserstein \ac{GAN}}
-Furthermore, another method is introduced, according to \cite{wgan-improvement}. Here, instead of proceeding according to a simple \ac{GAN}, this is replaced by a \ac{WGAN}. This leads to the fact that first of all instead of the optimizer \textit{Adam}, the optimizer \textit{\ac{RMSProp}} is used. In addition, the weights in the discriminator are clipped, which also leads to the fact that the discriminator now has to be trained five times more than the generator. Furthermore, the \textit{sigmoid} activation is removed from the output layer of the discriminator. To implement all of this, a new class, \texttt{Cycle\_WGAN\_Discriminator}, is programmed for the \ac{WGAN} discriminator.
+Furthermore, another method, the \ac{WGAN}, is introduced according to \cite{wgan-improvement}. In a \ac{WGAN}, the optimizer \textit{\ac{RMSProp}} is used instead of \textit{Adam}. In addition, the weights in the discriminator are clipped, which leads to the fact that the discriminator has to be trained five times more often than the generator. Furthermore, the \textit{sigmoid} activation is removed from the output layer of the discriminator. To implement all of this, the new class \texttt{Cycle\_WGAN\_Discrimina tor} is created.
 
-So that the network can also be included in the same lean colab notebook, the argument \texttt{Cycle\_WGAN} is introduced. If the argument is set to \textit{true}, then a Cycle-\ac{WGAN} is created, in the other case a standard Cycle\ac{GAN}. Here then also the optimizer is initialized instead of as \textit{Adam}, as \textit{\ac{RMSProp}}.
+For including it in the same lean colab notebook, the argument \texttt{Cycle\_WGAN} is introduced. If the argument is set to \textit{true}, a Cycle-\ac{WGAN} is created, in the other case a classical Cycle\ac{GAN}. Addtionally, the optimizer is initialized  as \textit{\ac{RMSProp} instead of \textit{Adam}}.
 
 %------------------------------------------------
 
 \section{Results and Analysis}
-In this section, the results are presented and an analysis of the results is carried out. Since not all results can be presented here, only selected analyses are presented as examples. All other analysis data can be viewed in the associated Github reposistory~\cite{ourGithubRepo}.
+In this section, the results are presented and an analysis is carried out. Since not all results can be shown here, only selected analyses are provided. Any other results are available in the associated Github reposistory~\cite{ourGithubRepo}.
 
 \subsection{Training and Test performance}
-\autoref{fig:trainTestComparisonAppl2orange} shows a graph including the averaged training and test losses of the two discriminator and two generator types. In general the discriminator losses are about 30 to 40\% smaller than the generator losses. Both types show a decreasing trend of the losses, whereby this is more evident for the generator losses than for the discriminator losses. This may also be due to the fact that the discriminator losses start out significantly smaller. Furthermore, it can be seen that the test losses for both discriminators fluctuate significantly more than the training losses, whereas this is exactly the opposite for the generators. At the end of the 2700 training steps (3 epochs), the generators training losses and the discriminator B test loss have a decreasing trend, while all the others have a slightly increasing trend. However, since the trend is downward over the entire 3 epochs, these slightly increasing trends will probably only lead to local maxima in further training.
+\autoref{fig:trainTestComparisonAppl2orange} shows a graph including the average training and test losses of the discriminators and  generators of a classical Cycle\ac{GAN}. In general, the discriminator losses are about 30 to 40\% smaller than the generator losses. Both types show a decreasing trend, whereby this is more evident for the generator than for the discriminator. Furthermore, it can be seen that the test losses for both discriminators fluctuate significantly more than the training losses, whereas the opposite is the case for the generators. At the end of the 2700 training steps (3 epochs), the generator training losses and the discriminator B test loss have a decreasing trend, while all the others have a slightly increasing trend. But since the trend is downward over the entire 3 epochs, these slightly increasing trends will probably only be local maxima in further training.
 
 \begin{figure}[htb] 
 	\centering 
 	\includegraphics[width=\linewidth]{trainTestComparisonAppl2orange}
-	\caption{History of discriminators and generator losses for test and training data over the training epochs of the dataset \textit{apple2orange}.}
+	\caption{Average discriminator and generator losses during training and test with a classical Cycle\ac{GAN} on the dataset \textit{apple2orange}.}
 	\label{fig:trainTestComparisonAppl2orange}
 \end{figure}
 
-However, it can be said that training and test losses run in tandem with each other and show a tendency to improve the network architecture with the implementation of the training.
+Thus, the training and test losses run in tandem with each other and show a tendency to improve the network architecture during training.
 
-For dataset \textit{monet2photo}, the discriminator losses are also lower than those of the generators. Furthermore, falling trends can be seen here as well. In contrast to dataset \textit{apple2orange}, the discriminator test and training losses diverge more. Overall, the generator losses are also about 10\% smaller than those of dataset \textit{apple2orange}.
+For the dataset \textit{monet2photo}, the discriminator losses are also lower than those of the generators. Furthermore, falling trends can be recognized here as well. In contrast to the dataset \textit{apple2orange}, the discriminator test and training losses diverge more. Overall, the generator losses are about 10\% smaller than those of the dataset \textit{apple2orange}.
 
 \subsection{Components of the Generator loss}
-Another interesting point of analysis is the examination of the various losses of the generator presented earlier. For dataset \textit{monet2photo}, these are seen from \texttt{generator\_A\_to\_B} in \autoref{fig:componentsGeneratorLossMonet2Photo}. As can be seen, the losses are almost all on a downward trend. The adversarial loss is very striking. This has a very strong upward tendency after about 1200 training steps. Despite all this, the combined loss of the generator (overall loss) maintains the downward trend. Towards the end, the adversarial loss begins to indicate a downward trend again. Nevertheless, there is currently a global maximum at training step 2550.
+Another interesting point for analyzing is the examination of the various losses of the generator presented earlier. For the dataset \textit{monet2photo}, these are taken from \texttt{generator\_A \_to\_B} in \autoref{fig:componentsGeneratorLossMonet2Photo}. Almost all losses are on a downward trend. The adversarial loss is quite noticeable. It has a strong upward tendency after about 1200 training steps which might occur due to the improved quality of the generated images. This is indicated by the overall loss of the generator which maintains the downward trend. Towards the end, the adversarial loss shows a downward trend again. Nevertheless, there is a global maximum at training step 2550.
 
 \begin{figure}[htb] 
 	\centering 
 	\includegraphics[width=\linewidth]{componentsGeneratorLossMonet2Photo}
-	\caption{History of the different generator losses (\texttt{generator\_A\_to\_B}) of the training data over all trainings epochs of the dataset \textit{monet2photo}.}
+	\caption{Different Generator losses (\texttt{generator\_A\_to\_B}) during training with a classical Cycle\ac{GAN} on the dataset \textit{monet2photo}.}
 	\label{fig:componentsGeneratorLossMonet2Photo}
 \end{figure}
 
-The adversarial loss in \autoref{fig:componentsGeneratorLossMonet2Photo}, however, never exceeds the value of the overall loss, as is the case with dataset \textit{apple2orange}. But here too, despite all this, the other losses show a clear downward trend. Accordingly, it can be said that here too it is clear that the network improves over the course of the training.
+The adversarial loss in \autoref{fig:componentsGeneratorLossMonet2Photo} never exceeds the value of the overall loss, as it is the case for the dataset \textit{apple2orange}. Despite this, the other losses show a clear downward trend. Accordingly, it can be said that the network improves during training.
 
 \subsection{Comparison of the Cycle\ac{GAN} variations}
-The different Cycle\ac{GAN} variations show different progressions in the losses, see \autoref{fig:generatorCycleGANTypes} and \autoref{fig:discriminatorCycleGANTypes}. While the discriminator losses show only a very slight downward trend within the three epochs, this trend can be seen more clearly in the generator losses. While the curve for the Cycle\ac{WGAN} generator loss is much smoother, it is much more erratic for the discriminator than for the other variations. The lowest generator loss is achieved by the classic Cycle\ac{GAN}, whereas this is not the case with the discriminator. This may also be related to the fact that better generated images are also more difficult to detect by a discriminator and vice versa. On the basis of these results, it is not possible to say whether one of the networks works better or worse than another. For this, an even longer training period would provide more information. 
+The different Cycle\ac{GAN} variations show different progressions for their losses, see \autoref{fig:generatorCycleGANTypes} and \autoref{fig:discriminatorCycleGANTypes}. While the discriminator losses show only a slight downward trend within the three epochs, this trend can be seen more clearly in the generator losses. While the curve for the Cycle\ac{WGAN} generator loss is smoother, it is more erratic for the discriminator than compared to the other variations. The lowest generator loss is achieved by the classic Cycle\ac{GAN}, whereas this is not the case for the discriminator. This may also be related to the fact that better generated images are more difficult to detect by the discriminator. On the basis of these results, it is not possible to say whether one of the networks works better or worse than another. To do so, a longer training process would be necessary. 
 
 \begin{figure}[htb] 
 	\centering 
 	\includegraphics[width=\linewidth]{generatorCycleGANTypes}
-	\caption{History of the overall loss of different Cycle\ac{GAN} variations of (\texttt{generator\_A\_to\_B}) of the training data over all trainings epochs of the dataset \textit{monet2photo}.}
+	\caption{Overall losses during training of \texttt{generator\_A\_to\_B} for the different Cycle\ac{GAN} variations on the dataset \textit{monet2photo}.}
 	\label{fig:generatorCycleGANTypes}
 \end{figure}
 
 \begin{figure}[htb] 
 	\centering 
 	\includegraphics[width=\linewidth]{discriminatorCycleGANTypes}
-	\caption{History of the overall loss of different Cycle\ac{GAN} variations of (\texttt{discriminator\_A}) of the training data over all trainings epochs of the dataset \textit{monet2photo}.}
+	\caption{Overall losses during training of \texttt{discriminator\_A} for the different Cycle\ac{GAN} variations on the dataset \textit{monet2photo}.}
 	\label{fig:discriminatorCycleGANTypes}
 \end{figure}
 
-Another possibility is to compare the quality of the sample images. \autoref{fig:ClassicalCycleGANExample} shows an already great success after three epochs in the translation of an apple image into an orange image. In comparison, the generated images of the other variations, see \autoref{fig:CycleWGANExample} and \autoref{fig:RegularizedCycleGANExample}, look much less like oranges. However, no qualitative statement can be made about whether the generated image of the Regularised Cycle\ac{GAN} or Cylce{WGAN} looks more realistic than the other. Both images are very similar although the losses differ in numbers.
-You can see the transitions between the individual fruits quite well despite the generated images. The borders were not changed much by any of the Cycle\ac{GAN} variants. This shows that all Cycle\ac{GAN} variations have basically recognised the fruit feature as such.
+Another possibility for evaluation is the qualitative comparison of the generated images. \autoref{fig:ClassicalCycleGANExample} already  shows great success in the translation of an apple image to an orange image after three epochs. In comparison, the generated images of the other variations, see \autoref{fig:CycleWGANExample} and \autoref{fig:RegularizedCycleGANExample}, do not look so much like oranges. However, no qualitative statement can be made about whether the generated images of the Regularised Cycle\ac{GAN} or the Cylce{WGAN} are more realistic.
+The transitions between the individual fruits are quite well visible. Thus, all Cycle\ac{GAN} variations are basically able to recognise and keep object boundaries.
 
 \begin{figure}[htb] 
 	\centering 
 \begin{subfigure}[b]{0.45\linewidth}
 	\includegraphics[width=\linewidth]{ClassicalCycleGANOriginalDomainA}
-	\caption{Original example image of domain A}
+	\caption{Original example image from domain A}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.45\linewidth}
 	\includegraphics[width=\linewidth]{ClassicalCycleGANGenDomainBAfter8}
-	\caption{Generic image after 2700 training steps}
+	\caption{Generated image after 2700 training steps}
 	\end{subfigure}
-\caption{Example of an image processed by the Classical Cycle\ac{GAN} from domain A to B of dataset \textit{apple2orange}}
+\caption{Example of an image processed by the classical Cycle\ac{GAN} from domain A to B of dataset \textit{apple2orange}}
 \label{fig:ClassicalCycleGANExample}
 \end{figure}
 
@@ -480,12 +478,12 @@ You can see the transitions between the individual fruits quite well despite the
 	\centering 
 \begin{subfigure}[b]{0.45\linewidth}
 	\includegraphics[width=\linewidth]{CycleWGANOriginalDomainA}
-	\caption{Original example image of domain A}
+	\caption{Original example image from domain A}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.45\linewidth}
 	\includegraphics[width=\linewidth]{CycleWGANGenDomainBAfter5}
-	\caption{Generic image after 1500 training steps}
+	\caption{Generated image after 1500 training steps}
 	\end{subfigure}
 \caption{Example of an image processed by the Cycle\ac{WGAN} from domain A to B of dataset \textit{apple2orange}}
 \label{fig:CycleWGANExample}
@@ -495,50 +493,47 @@ You can see the transitions between the individual fruits quite well despite the
 	\centering 
 \begin{subfigure}[b]{0.45\linewidth}
 	\includegraphics[width=\linewidth]{RegularizedCycleGANOriginalDomainA}
-	\caption{Original example image of domain A}
+	\caption{Original example image from domain A}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.45\linewidth}
 	\includegraphics[width=\linewidth]{RegularizedCycleGANGenDomainBAfter8}
-	\caption{Generic image after 2700 training steps}
+	\caption{Generated image after 2700 training steps}
 	\end{subfigure}
 \caption{Example of an image processed by the Regularized Cycle\ac{GAN} from domain A to B of dataset \textit{apple2orange}}
 \label{fig:RegularizedCycleGANExample}
 \end{figure}
 
 \subsection{Limitations of the Cycle\ac{GAN} architecture}
-As the training of the \textit{selfie2anime} dataset takes too long for this project framework, only very few training steps (300) could be carried out and only one test could be conducted after them. The result is shown in \autoref{fig:CycleWGANSelfieExample}. You can see that the colours are transformed well and quickly, whereas the contours are not. This can be seen very clearly in the area of the eyes, for example.
+As the training of the \textit{selfie2anime} dataset takes too long for the scope of this project, only a few training steps (300) could be carried out and only one test could be conducted afterwards. The result is shown in \autoref{fig:CycleWGANSelfieExample}. The colours are transformed well and quickly, whereas the contours are not. This  is quite obvious in the area of the eyes as Anime characters have significantly larger and circular eyes than humans.
 
-This result is also reflected in the comparison with the \textit{apple2orange} example, where the colour of the apples changes quite quickly to orange, but the contours remain almost untouched.
+This result is also reflected in the comparison to the \textit{apple2orange} dataset, where the colour of the apples changes quite quickly to orange, but the contours remain almost untouched.
 
 \begin{figure}[htb] 
 	\centering 
 \begin{subfigure}[b]{0.45\linewidth}
 	\includegraphics[width=\linewidth]{RegularizedCycleGANOriginalSelfieDomainA}
-	\caption{Original example image of domain A}
+	\caption{Original example image from domain A}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.45\linewidth}
 	\includegraphics[width=\linewidth]{RegularizedCycleGANGenAnimeDomainB}
-	\caption{Generic image after 300 training steps}
+	\caption{Generated image after 300 training steps}
 	\end{subfigure}
 \caption{Example of an image processed by the Regularized Cycle\ac{GAN} from domain A to B of dataset \textit{selfie2anime}}
 \label{fig:CycleWGANSelfieExample}
 \end{figure}
 
-
 \section{Conclusion and Future work}
-The analysis between different datasets, as well as a more detailed look at the losses between each other, and much more could be explored in more detail. However, this is outside the time frame of the project. Further limits and extension ideas are touched on below.
+Unlike previously planned, the analysis of the dataset \textit{selfie2 anime} could not be carried as detailed as for the Tensorflow datasets due to the training process which duration is too long for the scope of this project. Despite a subsequent reduction of the epochs to one, the network needed more than 12 hours. In addition, with Goolge Colab's limitation of GPU time, it is hardly possible to train for such a long period. However, a few results of the first training steps are available. Since these are difficult to compare with the ones from the other datasets, a more detailed analysis is not performed here. Nevertheless, a few interesting features already developed within the first training steps. So it would be interesting to extend this analysis in further projects.
 
-Unlike previously planned, the analysis could only be carried out more detailed using the Tensorflow datasets, as the duration of the training process for the Kaggle dataset \textit{selfie2anime} was too long. Despite a subsequent reduction of the epochs to one, the network needed more than half a day. In addition, with Goolge Colab's limitation of GPU time, it was hardly possible to train over such a long period. Nevertheless, few results of the first training steps were stored in the repository. However, since this is difficult to compare with the other datasets due to the few trainings steps in comparison, a more detailed analysis was not performed here. However, since a few interesting features already developed within the first training steps, this analysis should be expanded in further projects.
+The images of the datasets had to be reduced in size in order to be able to train for more epochs. So the behaviour of the different Cycle\ac{GAN} variations at a higher image resolution is another interesting point to investigate.
 
-The images of the datasets also had to be greatly reduced in size in order to be able to train approximately within the framework of the project. The behaviour of the network at a higher resolution of the images is another interesting detail to investigate.
+Furthermore, it would be possible to extend the tests and results. In order to have an even better comparability of the Cycle\ac{GAN} variations, the same five test images could be used for all variations. A difficulty for the implementation is the design of the notebook as this is always executed new. The five test images would therefore have to be administered externally beforehand in order to always be able to guarantee access to the same images.
 
-Furthermore, it would be possible to expand the training and tests. In order to have an even better comparability between the Cycle\ac{GAN} variations, the same 5 test images could always be used for all variations. This was only noticed during the analysis and was no longer implemented due to time constraints, among other things. Another difficulty for the implementation is also the design of the notebook, as this is always executed anew. The five test images would therefore have to be administered externally beforehand in order to be able to guarantee access to the always same images.
+Another improvement can be found in the saving of the data. Here, an even more detailed evaluation could take place if the data was saved after each training step. But due to the huge flood of data and the increased computing time, this was not conducted.
 
-Another improvement can be found in the saving of data. Here, an even more detailed evaluation could take place if data were saved after each training step. However, due to the huge flood of data and the increased computing time, this was not done.
-
-In summary, the results of the project are more meaningful than previously expected. Nevertheless, there is much more potential of the Cycle\ac{GAN}s that could not be realised in this project due to time constraints.
+In summary, the results of the project are more meaningful than previously expected. Nevertheless, there is much potential in the design and training of the Cycle\ac{GAN}s that could not be realised in this project due to time constraints.
 
 
 %----------------------------------------------------------------------------------------
